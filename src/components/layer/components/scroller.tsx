@@ -24,6 +24,8 @@ export default function Scroller(props: Props) {
   const groupRef = React.useRef<THREE.Group | null>(null);
   const thumbGroupXRef = React.useRef<THREE.Group | null>(null);
   const thumbGroupYRef = React.useRef<THREE.Group | null>(null);
+  const draggingScrollThumbXRef = React.useRef(false);
+  const draggingScrollThumbYRef = React.useRef(false);
   const progressRef = React.useRef({ x: 0, y: 0 });
 
   const style: Required<Props["style"]> = React.useMemo(() => {
@@ -43,6 +45,18 @@ export default function Scroller(props: Props) {
       y: Math.max(props.size.height * 0.05, props.size.height * (props.size.height / props.childrenSize.height)),
     };
   }, [props.size, props.childrenSize, overscrollSize]);
+
+  React.useEffect(() => {
+    function onPointerUp() {
+      draggingScrollThumbXRef.current = false;
+      draggingScrollThumbYRef.current = false;
+    }
+
+    window.addEventListener("pointerup", onPointerUp);
+    return () => {
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+  }, []);
 
   useFrame(() => {
     const group = groupRef.current;
@@ -80,6 +94,9 @@ export default function Scroller(props: Props) {
           <mesh
             position-x={props.size.width / -2 + thumbSize.x / 2}
             position-y={props.size.height / -2 + style.size / 2}
+            onPointerDown={() => {
+              draggingScrollThumbXRef.current = true;
+            }}
           >
             <planeGeometry args={[thumbSize.x, style.size]} />
             <meshBasicMaterial depthWrite={false} color={style.thumbColor} />
@@ -98,6 +115,9 @@ export default function Scroller(props: Props) {
           <mesh
             position-x={props.size.width / 2 - style.size / 2}
             position-y={props.size.height / 2 + thumbSize.y / -2}
+            onPointerDown={() => {
+              draggingScrollThumbYRef.current = true;
+            }}
           >
             <planeGeometry args={[style.size, thumbSize.y]} />
             <meshBasicMaterial depthWrite={false} color={style.thumbColor} />
@@ -106,6 +126,15 @@ export default function Scroller(props: Props) {
       </group>
       <mesh
         visible={false}
+        onPointerMove={(event) => {
+          if (event.uv === undefined) return;
+          if (draggingScrollThumbXRef.current) {
+            progressRef.current.x = event.uv.x;
+          }
+          if (draggingScrollThumbYRef.current) {
+            progressRef.current.y = 1 - event.uv.y;
+          }
+        }}
         onWheel={(event) => {
           // todo: reduce inertia for slow scroll wheels
           const inertia = 3000;
