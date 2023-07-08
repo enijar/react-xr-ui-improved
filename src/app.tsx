@@ -16,7 +16,7 @@ export default function App() {
           alignItems: "center",
           justifyContent: "start",
           gap: "5%",
-          overflow: "auto",
+          overflow: "auto"
         }}
       >
         {Array.from(Array(20)).map((_, index) => {
