@@ -8,6 +8,8 @@ import useSize, {
 } from "@/components/layer/hooks/use-size";
 import { LayerContext, type LayerContextType } from "@/components/layer/context";
 import Scroller from "@/components/layer/components/scroller";
+import useChildren from "@/components/layer/hooks/use-children";
+import useClippingPlanes from "@/components/layer/hooks/use-clipping-planes";
 
 type Props = {
   width?: SizeProps["width"];
@@ -36,31 +38,9 @@ export default function Layer(props: Props) {
     return props.style ?? {};
   }, [props.style]);
 
-  const context = React.useContext(LayerContext);
+  const clippingPlanes = useClippingPlanes();
 
-  const clippingPlanes = React.useMemo(() => {
-    if (context?.parent?.overflow === "visible") {
-      return [];
-    }
-    const top = new THREE.Plane(new THREE.Vector3(0, -1, 0), 1);
-    const right = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1);
-    const bottom = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1);
-    const left = new THREE.Plane(new THREE.Vector3(1, 0, 0), 1);
-    return [top, right, bottom, left];
-  }, [context.parent?.overflow]);
-
-  const children = React.useMemo(() => {
-    if (props.children === undefined) return [];
-    const flexDirection = props.style?.flexDirection ?? "row";
-    const children = Array.isArray(props.children) ? props.children : [props.children];
-    switch (flexDirection) {
-      case "row-reverse":
-      case "column-reverse":
-        return [...children].reverse();
-      default:
-        return children;
-    }
-  }, [props.children, props.style?.flexDirection]);
+  const children = useChildren({ children: props.children, style: { flexDirection: style?.flexDirection } });
 
   const childrenPosition = React.useMemo(() => {
     if (children.length === 0) {
