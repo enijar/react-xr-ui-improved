@@ -6,6 +6,7 @@ export type LayerContextType = {
       width: number;
       height: number;
     };
+    overflow: "hidden" | "auto" | "visible";
   };
 };
 

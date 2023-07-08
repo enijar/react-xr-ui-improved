@@ -7,6 +7,7 @@ import useSize, {
   type SizeProps,
 } from "@/components/layer/hooks/use-size";
 import { LayerContext, type LayerContextType } from "@/components/layer/context";
+import Scroller from "@/components/layer/components/scroller";
 
 type Props = {
   width?: SizeProps["width"];
@@ -19,6 +20,8 @@ type Props = {
     gap?: number | `${number}%`;
     alignItems?: "start" | "center" | "end";
     justifyContent?: "start" | "center" | "end";
+    overflow?: "hidden" | "auto" | "visible";
+    scrollbarVisible?: boolean;
   };
 };
 
@@ -32,6 +35,19 @@ export default function Layer(props: Props) {
   const style = React.useMemo<Props["style"]>(() => {
     return props.style ?? {};
   }, [props.style]);
+
+  const context = React.useContext(LayerContext);
+
+  const clippingPlanes = React.useMemo(() => {
+    if (context?.parent?.overflow === "visible") {
+      return [];
+    }
+    const top = new THREE.Plane(new THREE.Vector3(0, -1, 0), 1);
+    const right = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1);
+    const bottom = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1);
+    const left = new THREE.Plane(new THREE.Vector3(1, 0, 0), 1);
+    return [top, right, bottom, left];
+  }, [context.parent?.overflow]);
 
   const children = React.useMemo(() => {
     if (props.children === undefined) return [];
@@ -114,74 +130,87 @@ export default function Layer(props: Props) {
   return (
     <LayerContext.Provider
       value={React.useMemo<LayerContextType>(() => {
+        const overflow = props.style?.overflow ?? "visible";
         return {
-          parent: props.children === undefined ? null : { size },
+          parent: props.children === undefined ? null : { size, overflow },
         };
       }, [props.children, size])}
     >
       <group>
         <mesh>
           <planeGeometry args={[size.width, size.height]} />
-          <meshBasicMaterial color={style?.backgroundColor} depthWrite={false} />
+          <meshBasicMaterial color={style?.backgroundColor} depthWrite={false} clippingPlanes={clippingPlanes} />
         </mesh>
-        <group position-x={childrenPosition.x} position-y={childrenPosition.y}>
-          {children.map((child, index) => {
-            const alignItems = props.style?.alignItems ?? "center";
-            const justifyContent = props.style?.justifyContent ?? "center";
-            const flexDirection = props.style?.flexDirection ?? "row";
-            const lastIndex = Math.max(0, children.length - 1);
-            const gapSize = calculateSize({ width: props.style?.gap ?? 0, height: props.style?.gap ?? 0 }, size);
-            const childSize = calculateChildSize(child, size);
-            let x = 0;
-            let y = 0;
-            const childrenSize = calculateChildrenSize(children, size, flexDirection);
-            for (let i = 0; i <= index; i++) {
-              if (["row", "row-reverse"].includes(flexDirection)) {
-                const offsetY =
-                  childSize.height < childrenSize.height ? (childrenSize.height - childSize.height) / 2 : 0;
-                if (alignItems === "start") {
-                  y = offsetY;
-                }
-                if (alignItems === "end") {
-                  y = -offsetY;
-                }
-                if (i === 0) {
-                  x += childSize.width / 2;
-                } else {
-                  const prevChild = children[i - 1];
-                  const prevChildSize = calculateChildSize(prevChild, size);
-                  x += prevChildSize.width;
-                  if (i <= lastIndex) {
-                    x += gapSize.width;
+        {children.length > 0 && (
+          <Scroller
+            size={size}
+            childrenSize={calculateChildrenSize(
+              children,
+              size,
+              props.style?.flexDirection ?? "row",
+              props.style?.gap ?? 0
+            )}
+            scrollbarVisible={props.style?.scrollbarVisible ?? true}
+          >
+            <group position-x={childrenPosition.x} position-y={childrenPosition.y}>
+              {children.map((child, index) => {
+                const alignItems = props.style?.alignItems ?? "center";
+                const flexDirection = props.style?.flexDirection ?? "row";
+                const lastIndex = Math.max(0, children.length - 1);
+                const gapSize = calculateSize({ width: props.style?.gap ?? 0, height: props.style?.gap ?? 0 }, size);
+                const childSize = calculateChildSize(child, size);
+                let x = 0;
+                let y = 0;
+                const childrenSize = calculateChildrenSize(children, size, flexDirection);
+                for (let i = 0; i <= index; i++) {
+                  if (["row", "row-reverse"].includes(flexDirection)) {
+                    const offsetY =
+                      childSize.height < childrenSize.height ? (childrenSize.height - childSize.height) / 2 : 0;
+                    if (alignItems === "start") {
+                      y = offsetY;
+                    }
+                    if (alignItems === "end") {
+                      y = -offsetY;
+                    }
+                    if (i === 0) {
+                      x += childSize.width / 2;
+                    } else {
+                      const prevChild = children[i - 1];
+                      const prevChildSize = calculateChildSize(prevChild, size);
+                      x += prevChildSize.width;
+                      if (i <= lastIndex) {
+                        x += gapSize.width;
+                      }
+                    }
+                    continue;
+                  }
+                  const offsetX = childSize.width < childrenSize.width ? (childrenSize.width - childSize.width) / 2 : 0;
+                  if (alignItems === "start") {
+                    x = -offsetX;
+                  }
+                  if (alignItems === "end") {
+                    x = offsetX;
+                  }
+                  if (i === 0) {
+                    y -= childSize.height / 2;
+                  } else {
+                    const prevChild = children[i - 1];
+                    const prevChildSize = calculateChildSize(prevChild, size);
+                    y -= prevChildSize.height;
+                    if (i <= lastIndex) {
+                      y -= gapSize.height;
+                    }
                   }
                 }
-                continue;
-              }
-              const offsetX = childSize.width < childrenSize.width ? (childrenSize.width - childSize.width) / 2 : 0;
-              if (alignItems === "start") {
-                x = -offsetX;
-              }
-              if (alignItems === "end") {
-                x = offsetX;
-              }
-              if (i === 0) {
-                y -= childSize.height / 2;
-              } else {
-                const prevChild = children[i - 1];
-                const prevChildSize = calculateChildSize(prevChild, size);
-                y -= prevChildSize.height;
-                if (i <= lastIndex) {
-                  y -= gapSize.height;
-                }
-              }
-            }
-            return (
-              <group key={index} position-x={x} position-y={y}>
-                {child}
-              </group>
-            );
-          })}
-        </group>
+                return (
+                  <group key={index} position-x={x} position-y={y}>
+                    {child}
+                  </group>
+                );
+              })}
+            </group>
+          </Scroller>
+        )}
       </group>
     </LayerContext.Provider>
   );
