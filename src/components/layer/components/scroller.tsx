@@ -107,10 +107,11 @@ export default function Scroller(props: Props) {
       <mesh
         visible={false}
         onWheel={(event) => {
-          const speed = 500;
-          progressRef.current.x += event.deltaX / speed;
+          // todo: reduce inertia for slow scroll wheels
+          const inertia = 3000;
+          progressRef.current.x += event.deltaX / inertia;
           progressRef.current.x = THREE.MathUtils.clamp(progressRef.current.x, 0, 1);
-          progressRef.current.y += event.deltaY / speed;
+          progressRef.current.y += event.deltaY / inertia;
           progressRef.current.y = THREE.MathUtils.clamp(progressRef.current.y, 0, 1);
         }}
       >
