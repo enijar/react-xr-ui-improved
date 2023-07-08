@@ -1,24 +1,18 @@
 import React from "react";
 import { useThree } from "@react-three/fiber";
 import { LayerContext } from "@/lib/context";
-
-type ContainerSize = {
-  width: number;
-  height: number;
-};
-
-export type SizeProps = {
-  width?: number | `${number}%` | ((containerSize: ContainerSize) => number);
-  height?: number | `${number}%` | ((containerSize: ContainerSize) => number);
-  aspectRatio?: number;
-};
+import type { ContainerSize, SizeProps, StyleProps } from "@/lib/types";
 
 const DEFAULT_PROPS: SizeProps = {
   width: 1,
   height: 1,
 };
 
-export default function useSize(props: SizeProps) {
+export default function useSize(
+  width: SizeProps["width"],
+  height: SizeProps["width"],
+  aspectRatio: SizeProps["aspectRatio"]
+) {
   const context = React.useContext(LayerContext);
 
   const viewport = useThree((state) => state.viewport);
@@ -31,8 +25,8 @@ export default function useSize(props: SizeProps) {
   }, [context.parent, viewport.width, viewport.height]);
 
   return React.useMemo(() => {
-    return calculateSize(props, containerSize);
-  }, [props, containerSize]);
+    return calculateSize({ width, height, aspectRatio }, containerSize);
+  }, [width, height, aspectRatio, containerSize]);
 }
 
 export function calculateSize(props: SizeProps, containerSize: ContainerSize) {
@@ -62,23 +56,18 @@ export function calculateSize(props: SizeProps, containerSize: ContainerSize) {
 
 type Children = React.ReactElement<SizeProps>[];
 
-export function calculateChildrenSize(
-  children: Children,
-  containerSize: ContainerSize,
-  flexDirection: "row" | "row-reverse" | "column" | "column-reverse" = "row",
-  gap: number | `${number}%` = 0
-) {
+export function calculateChildrenSize(children: Children, containerSize: ContainerSize, style: StyleProps) {
   const lastIndex = Math.max(0, children.length - 1);
-  const gapSize = calculateSize({ width: gap, height: gap }, containerSize);
+  const gapSize = calculateSize({ width: style.gap, height: style.gap }, containerSize);
   let width = Math.max(...children.map((child) => calculateChildSize(child, containerSize).width));
   let height = Math.max(...children.map((child) => calculateChildSize(child, containerSize).height));
-  if (["row", "row-reverse"].includes(flexDirection)) {
+  if (["row", "row-reverse"].includes(style.flexDirection)) {
     width = children.reduce((width, child, index) => {
       const size = calculateChildSize(child, containerSize);
       return width + size.width + (index > 0 && index <= lastIndex ? gapSize.width : 0);
     }, 0);
   }
-  if (["column", "column-reverse"].includes(flexDirection)) {
+  if (["column", "column-reverse"].includes(style.flexDirection)) {
     height = children.reduce((height, child, index) => {
       const size = calculateChildSize(child, containerSize);
       return height + size.height + (index > 0 && index <= lastIndex ? gapSize.height : 0);
