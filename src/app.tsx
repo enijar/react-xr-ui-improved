@@ -8,6 +8,7 @@ export default function App() {
     <Canvas flat linear gl={{ alpha: false, localClippingEnabled: true }}>
       <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <Layer
+        position={[0, -1, 0]}
         height={2}
         aspectRatio={1}
         style={{

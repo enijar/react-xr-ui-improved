@@ -20,3 +20,5 @@ export type SizeProps = {
   height?: number | `${number}%` | ((containerSize: ContainerSize) => number);
   aspectRatio?: number;
 };
+
+export type Position = [x?: number, y?: number, z?: number];

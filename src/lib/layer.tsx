@@ -1,7 +1,7 @@
 import React from "react";
 import useSize, { calculateChildrenSize } from "@/lib/use-size";
 import { LayerContext } from "@/lib/context";
-import type { SizeProps, StyleProps } from "@/lib/types";
+import type { Position, SizeProps, StyleProps } from "@/lib/types";
 import Scroller from "@/lib/scroller";
 import useChildren from "@/lib/use-children";
 import useClippingPlanes from "@/lib/use-clipping-planes";
@@ -15,15 +15,16 @@ type Props = {
   aspectRatio?: SizeProps["aspectRatio"];
   children?: React.ReactNode;
   style?: Partial<StyleProps>;
+  position?: Position;
 };
 
 export default function Layer(props: Props) {
   const size = useSize(props.width, props.height, props.aspectRatio);
   const style = useStyle(props.style);
-  const clippingPlanes = useClippingPlanes();
+  const clippingPlanes = useClippingPlanes(size);
   const children = useChildren(props.children, style);
   const flexbox = useFlexbox(children, size, style);
-  const contextValue = useContextValue(children, style, size);
+  const contextValue = useContextValue(children, style, size, clippingPlanes);
   const childrenSize = React.useMemo(() => {
     return calculateChildrenSize(children, size, style);
   }, [children, size, style]);
@@ -35,24 +36,31 @@ export default function Layer(props: Props) {
 
   return (
     <LayerContext.Provider value={contextValue}>
-      <mesh>
-        <planeGeometry args={[size.width, size.height]} />
-        <meshBasicMaterial color={style.backgroundColor} depthWrite={false} clippingPlanes={clippingPlanes} />
-      </mesh>
-      {children.length > 0 && (
-        <Scroller size={size} childrenSize={childrenSize} scrollbarVisible={style.scrollbarVisible}>
-          <group position-x={flexbox.x} position-y={flexbox.y}>
-            {children.map((child, index) => {
-              const position = childrenPositions[index];
-              return (
-                <group key={index} position-x={position.x} position-y={position.y}>
-                  {child}
-                </group>
-              );
-            })}
-          </group>
-        </Scroller>
-      )}
+      <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
+        <mesh>
+          <planeGeometry args={[size.width, size.height]} />
+          <meshBasicMaterial
+            color={style.backgroundColor}
+            depthWrite={false}
+            clippingPlanes={clippingPlanes}
+            transparent={true}
+          />
+        </mesh>
+        {children.length > 0 && (
+          <Scroller size={size} childrenSize={childrenSize} scrollbarVisible={style.scrollbarVisible}>
+            <group position-x={flexbox.x} position-y={flexbox.y}>
+              {children.map((child, index) => {
+                const position = childrenPositions[index];
+                return (
+                  <group key={index} position-x={position.x} position-y={position.y}>
+                    {child}
+                  </group>
+                );
+              })}
+            </group>
+          </Scroller>
+        )}
+      </group>
     </LayerContext.Provider>
   );
 }

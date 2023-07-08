@@ -87,7 +87,7 @@ export default function Scroller(props: Props) {
         {/* track */}
         <mesh position-y={props.size.height / -2 + style.size / 2}>
           <planeGeometry args={[props.size.width, style.size]} />
-          <meshBasicMaterial depthWrite={false} color={style.trackColor} />
+          <meshBasicMaterial depthWrite={false} color={style.trackColor} transparent={true} />
         </mesh>
         {/* thumb */}
         <group ref={thumbGroupXRef}>
@@ -99,7 +99,7 @@ export default function Scroller(props: Props) {
             }}
           >
             <planeGeometry args={[thumbSize.x, style.size]} />
-            <meshBasicMaterial depthWrite={false} color={style.thumbColor} />
+            <meshBasicMaterial depthWrite={false} color={style.thumbColor} transparent={true} />
           </mesh>
         </group>
       </group>
@@ -108,7 +108,7 @@ export default function Scroller(props: Props) {
         {/* track */}
         <mesh position-x={props.size.width / 2 - style.size / 2}>
           <planeGeometry args={[style.size, props.size.height]} />
-          <meshBasicMaterial depthWrite={false} color={style.trackColor} />
+          <meshBasicMaterial depthWrite={false} color={style.trackColor} transparent={true} />
         </mesh>
         {/* thumb */}
         <group ref={thumbGroupYRef}>
@@ -120,7 +120,7 @@ export default function Scroller(props: Props) {
             }}
           >
             <planeGeometry args={[style.size, thumbSize.y]} />
-            <meshBasicMaterial depthWrite={false} color={style.thumbColor} />
+            <meshBasicMaterial depthWrite={false} color={style.thumbColor} transparent={true} />
           </mesh>
         </group>
       </group>
