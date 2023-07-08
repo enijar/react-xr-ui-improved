@@ -1,6 +1,6 @@
 import React from "react";
 import * as THREE from "three";
-import { LayerContext } from "@/components/layer/context";
+import { LayerContext } from "@/lib/context";
 
 export default function useClippingPlanes() {
   const context = React.useContext(LayerContext);

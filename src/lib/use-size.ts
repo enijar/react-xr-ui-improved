@@ -1,6 +1,6 @@
 import React from "react";
 import { useThree } from "@react-three/fiber";
-import { LayerContext } from "@/components/layer/context";
+import { LayerContext } from "@/lib/context";
 
 type ContainerSize = {
   width: number;

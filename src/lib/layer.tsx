@@ -1,15 +1,10 @@
 import React from "react";
 import * as THREE from "three";
-import useSize, {
-  calculateChildrenSize,
-  calculateChildSize,
-  calculateSize,
-  type SizeProps,
-} from "@/components/layer/hooks/use-size";
-import { LayerContext, type LayerContextType } from "@/components/layer/context";
-import Scroller from "@/components/layer/components/scroller";
-import useChildren from "@/components/layer/hooks/use-children";
-import useClippingPlanes from "@/components/layer/hooks/use-clipping-planes";
+import useSize, { calculateChildrenSize, calculateChildSize, calculateSize, type SizeProps } from "@/lib/use-size";
+import { LayerContext, type LayerContextType } from "@/lib/context";
+import Scroller from "@/lib/scroller";
+import useChildren from "@/lib/use-children";
+import useClippingPlanes from "@/lib/use-clipping-planes";
 
 type Props = {
   width?: SizeProps["width"];
