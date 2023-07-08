@@ -38,9 +38,12 @@
     "webpack-watch-files-plugin": "^1.2.1"
   },
   "dependencies": {
+    "@react-three/drei": "^9.78.1",
+    "@react-three/fiber": "^8.13.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
+    "three": "^0.154.0",
     "zustand": "^4.3.8"
   }
 }
