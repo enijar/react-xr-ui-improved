@@ -1,18 +1,17 @@
 import React from "react";
 import { StyleProps } from "@/lib/types";
 
-const EMPTY_STYLE = {};
-
-export default function useStyle(style: Partial<StyleProps> = EMPTY_STYLE) {
+export default function useStyle(style?: Partial<StyleProps>) {
   return React.useMemo<StyleProps>(() => {
+    const props = style ?? {};
     return {
-      backgroundColor: style.backgroundColor ?? "#ffffff",
-      flexDirection: style.flexDirection ?? "row",
-      gap: style.gap ?? 0,
-      alignItems: style.alignItems ?? "center",
-      justifyContent: style.justifyContent ?? "center",
-      overflow: style.overflow ?? "visible",
-      scrollbarVisible: style.scrollbarVisible ?? true,
+      backgroundColor: props.backgroundColor ?? "#ffffff",
+      flexDirection: props.flexDirection ?? "row",
+      gap: props.gap ?? 0,
+      alignItems: props.alignItems ?? "center",
+      justifyContent: props.justifyContent ?? "center",
+      overflow: props.overflow ?? "visible",
+      scrollbarVisible: props.scrollbarVisible ?? true,
     };
   }, [style]);
 }

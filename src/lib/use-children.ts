@@ -1,23 +1,17 @@
 import React from "react";
+import type { StyleProps } from "@/lib/types";
 
-type Props = {
-  children: React.ReactNode;
-  style?: {
-    flexDirection?: "row" | "row-reverse" | "column" | "column-reverse";
-  };
-};
-
-export default function useChildren(props: Props) {
+export default function useChildren(children: React.ReactNode, style: StyleProps) {
   return React.useMemo(() => {
-    if (props.children === undefined) return [];
-    const flexDirection = props.style?.flexDirection ?? "row";
-    const children: React.ReactElement[] = Array.isArray(props.children) ? props.children : [props.children];
+    if (children === undefined) return [];
+    const flexDirection = style.flexDirection ?? "row";
+    const elements: React.ReactElement[] = Array.isArray(children) ? children : [children];
     switch (flexDirection) {
       case "row-reverse":
       case "column-reverse":
-        return [...children].reverse();
+        return [...elements].reverse();
       default:
-        return children;
+        return elements;
     }
-  }, [props.children, props.style?.flexDirection]);
+  }, [children, style.flexDirection]);
 }

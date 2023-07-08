@@ -76,52 +76,50 @@ export function calculateChildPosition(
   style: StyleProps,
   containerSize: ContainerSize
 ) {
-  return React.useMemo(() => {
-    const lastIndex = Math.max(0, children.length - 1);
-    const gapSize = calculateSize({ width: style.gap, height: style.gap }, containerSize);
-    const childSize = calculateChildSize(child, containerSize);
-    let x = 0;
-    let y = 0;
-    const childrenSize = calculateChildrenSize(children, containerSize, style);
-    for (let i = 0; i <= index; i++) {
-      if (["row", "row-reverse"].includes(style.flexDirection)) {
-        const offsetY = childSize.height < childrenSize.height ? (childrenSize.height - childSize.height) / 2 : 0;
-        if (style.alignItems === "start") {
-          y = offsetY;
-        }
-        if (style.alignItems === "end") {
-          y = -offsetY;
-        }
-        if (i === 0) {
-          x += childSize.width / 2;
-        } else {
-          const prevChild = children[i - 1];
-          const prevChildSize = calculateChildSize(prevChild, containerSize);
-          x += prevChildSize.width;
-          if (i <= lastIndex) {
-            x += gapSize.width;
-          }
-        }
-        continue;
-      }
-      const offsetX = childSize.width < childrenSize.width ? (childrenSize.width - childSize.width) / 2 : 0;
+  const lastIndex = Math.max(0, children.length - 1);
+  const gapSize = calculateSize({ width: style.gap, height: style.gap }, containerSize);
+  const childSize = calculateChildSize(child, containerSize);
+  let x = 0;
+  let y = 0;
+  const childrenSize = calculateChildrenSize(children, containerSize, style);
+  for (let i = 0; i <= index; i++) {
+    if (["row", "row-reverse"].includes(style.flexDirection)) {
+      const offsetY = childSize.height < childrenSize.height ? (childrenSize.height - childSize.height) / 2 : 0;
       if (style.alignItems === "start") {
-        x = -offsetX;
+        y = offsetY;
       }
       if (style.alignItems === "end") {
-        x = offsetX;
+        y = -offsetY;
       }
       if (i === 0) {
-        y -= childSize.height / 2;
+        x += childSize.width / 2;
       } else {
         const prevChild = children[i - 1];
         const prevChildSize = calculateChildSize(prevChild, containerSize);
-        y -= prevChildSize.height;
+        x += prevChildSize.width;
         if (i <= lastIndex) {
-          y -= gapSize.height;
+          x += gapSize.width;
         }
       }
+      continue;
     }
-    return { x, y };
-  }, []);
+    const offsetX = childSize.width < childrenSize.width ? (childrenSize.width - childSize.width) / 2 : 0;
+    if (style.alignItems === "start") {
+      x = -offsetX;
+    }
+    if (style.alignItems === "end") {
+      x = offsetX;
+    }
+    if (i === 0) {
+      y -= childSize.height / 2;
+    } else {
+      const prevChild = children[i - 1];
+      const prevChildSize = calculateChildSize(prevChild, containerSize);
+      y -= prevChildSize.height;
+      if (i <= lastIndex) {
+        y -= gapSize.height;
+      }
+    }
+  }
+  return { x, y };
 }
