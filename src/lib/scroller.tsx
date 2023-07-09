@@ -1,6 +1,7 @@
 import React from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { useMask } from "@react-three/drei";
 
 type Props = {
   children: React.ReactElement;
@@ -78,6 +79,24 @@ export default function Scroller(props: Props) {
     thumbGroupX.position.x = (props.size.width - thumbSize.x) * progressRef.current.x;
     thumbGroupY.position.y = (props.size.height - thumbSize.y) * -progressRef.current.y;
   });
+
+  const stencil = useMask(1, false);
+
+  React.useEffect(() => {
+    const group = groupRef.current;
+    if (group === null) return;
+    const maskMaterial = new THREE.MeshBasicMaterial({ ...stencil });
+    group.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) return;
+      if (!(child.material instanceof THREE.Material)) return;
+      child.material.stencilFail = stencil.stencilFail;
+      child.material.stencilFunc = stencil.stencilFunc;
+      child.material.stencilRef = stencil.stencilRef;
+      child.material.stencilWrite = stencil.stencilWrite;
+      child.material.stencilZFail = stencil.stencilZFail;
+      child.material.stencilZPass = stencil.stencilZPass;
+    });
+  }, [props.children, stencil]);
 
   return (
     <>

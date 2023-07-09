@@ -1,5 +1,4 @@
 import React from "react";
-import * as THREE from "three";
 
 export type LayerContextType = {
   parent: null | {
@@ -8,7 +7,6 @@ export type LayerContextType = {
       height: number;
     };
     overflow: "hidden" | "auto" | "visible";
-    clippingPlanes: THREE.Plane[];
   };
 };
 
