@@ -78,7 +78,7 @@ export function calculateChildrenSize(children: Children, containerSize: Contain
 
 export function calculateChildSize(child: React.ReactElement<SizeProps>, containerSize: ContainerSize) {
   return calculateSize(
-    { width: child.props.width, height: child.props.height, aspectRatio: child.props.aspectRatio },
+    { width: child.props?.width, height: child.props?.height, aspectRatio: child.props?.aspectRatio },
     containerSize
   );
 }
