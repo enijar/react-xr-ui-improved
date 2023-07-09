@@ -42,7 +42,7 @@ export default function Layer(props: Props) {
           <meshBasicMaterial
             color={style.backgroundColor}
             depthWrite={false}
-            clippingPlanes={clippingPlanes}
+            // clippingPlanes={clippingPlanes}
             transparent={true}
           />
         </mesh>
