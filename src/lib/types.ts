@@ -7,7 +7,6 @@ export type StyleProps = {
   alignItems: "start" | "center" | "end";
   justifyContent: "start" | "center" | "end";
   overflow: "hidden" | "auto" | "visible";
-  scrollbarVisible: boolean;
 };
 
 export type ContainerSize = {

@@ -2,12 +2,14 @@ import React from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useMask } from "@react-three/drei";
+import { StyleProps } from "@/lib/types";
 
 type Props = {
   children: React.ReactElement;
   size: { width: number; height: number };
   childrenSize: { width: number; height: number };
-  scrollbarVisible: boolean;
+  enabled: boolean;
+  overflow: StyleProps["overflow"];
   style?: {
     size?: number;
     trackColor?: THREE.ColorRepresentation;
@@ -60,6 +62,7 @@ export default function Scroller(props: Props) {
   }, []);
 
   useFrame(() => {
+    if (!props.enabled) return;
     const group = groupRef.current;
     const thumbGroupX = thumbGroupXRef.current;
     const thumbGroupY = thumbGroupYRef.current;
@@ -80,7 +83,7 @@ export default function Scroller(props: Props) {
     thumbGroupY.position.y = (props.size.height - thumbSize.y) * -progressRef.current.y;
   });
 
-  const stencil = useMask(1, false);
+  const stencil = useMask(["hidden", "auto"].includes(props.overflow) ? 1 : 0);
 
   React.useEffect(() => {
     const group = groupRef.current;
@@ -102,7 +105,7 @@ export default function Scroller(props: Props) {
     <>
       <group ref={groupRef}>{props.children}</group>
       {/* horizontal */}
-      <group visible={props.scrollbarVisible && overscrollSize.x > 0}>
+      <group visible={props.enabled && overscrollSize.x > 0}>
         {/* track */}
         <mesh position-y={props.size.height / -2 + style.size / 2}>
           <planeGeometry args={[props.size.width, style.size]} />
@@ -123,7 +126,7 @@ export default function Scroller(props: Props) {
         </group>
       </group>
       {/* vertical */}
-      <group visible={props.scrollbarVisible && overscrollSize.y > 0}>
+      <group visible={props.enabled && overscrollSize.y > 0}>
         {/* track */}
         <mesh position-x={props.size.width / 2 - style.size / 2}>
           <planeGeometry args={[style.size, props.size.height]} />
@@ -155,6 +158,7 @@ export default function Scroller(props: Props) {
           }
         }}
         onWheel={(event) => {
+          if (!props.enabled) return;
           // todo: reduce inertia for slow scroll wheels
           const inertia = 3000;
           progressRef.current.x += event.deltaX / inertia;

@@ -36,16 +36,23 @@ export default function Layer(props: Props) {
   return (
     <LayerContext.Provider value={contextValue}>
       <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
-        <Mask id={1}>
-          <planeGeometry args={[size.width, size.height]} />
-          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
-        </Mask>
+        {["hidden", "auto"].includes(style.overflow) && (
+          <Mask id={1}>
+            <planeGeometry args={[size.width, size.height]} />
+            <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
+          </Mask>
+        )}
         <mesh>
           <planeGeometry args={[size.width, size.height]} />
           <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
         </mesh>
         {children.length > 0 && (
-          <Scroller size={size} childrenSize={childrenSize} scrollbarVisible={style.scrollbarVisible}>
+          <Scroller
+            size={size}
+            childrenSize={childrenSize}
+            enabled={style.overflow === "auto"}
+            overflow={style.overflow}
+          >
             <group position-x={flexbox.x} position-y={flexbox.y}>
               {children.map((child, index) => {
                 const position = childrenPositions[index];
