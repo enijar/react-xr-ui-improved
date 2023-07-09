@@ -11,6 +11,7 @@ export default function useStyle(style?: Partial<StyleProps>) {
       alignItems: props.alignItems ?? "center",
       justifyContent: props.justifyContent ?? "center",
       overflow: props.overflow ?? "visible",
+      borderRadius: props.borderRadius ?? 0,
     };
   }, [style]);
 }

@@ -2,7 +2,8 @@ import React from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useMask } from "@react-three/drei";
-import { StyleProps } from "@/lib/types";
+import type { ScrollerStyleProps, StyleProps } from "@/lib/types";
+import { LayerContext } from "@/lib/context";
 
 type Props = {
   children: React.ReactElement;
@@ -10,14 +11,9 @@ type Props = {
   childrenSize: { width: number; height: number };
   enabled: boolean;
   overflow: StyleProps["overflow"];
-  style?: {
-    size?: number;
-    trackColor?: THREE.ColorRepresentation;
-    thumbColor?: THREE.ColorRepresentation;
-  };
 };
 
-const DEFAULT_STYLE: Required<Props["style"]> = {
+export const SCROLLER_STYLE: ScrollerStyleProps = {
   size: 0.05,
   trackColor: "#fafafa",
   thumbColor: "#c7c7c7",
@@ -31,9 +27,9 @@ export default function Scroller(props: Props) {
   const draggingScrollThumbYRef = React.useRef(false);
   const progressRef = React.useRef({ x: 0, y: 0 });
 
-  const style: Required<Props["style"]> = React.useMemo(() => {
-    return Object.assign({}, DEFAULT_STYLE, props.style ?? {});
-  }, [props.style]);
+  const style = React.useMemo(() => {
+    return { ...SCROLLER_STYLE };
+  }, []);
 
   const overscrollSize = React.useMemo(() => {
     return {
@@ -83,12 +79,13 @@ export default function Scroller(props: Props) {
     thumbGroupY.position.y = (props.size.height - thumbSize.y) * -progressRef.current.y;
   });
 
+  const context = React.useContext(LayerContext);
+
   const stencil = useMask(["hidden", "auto"].includes(props.overflow) ? 1 : 0);
 
   React.useEffect(() => {
     const group = groupRef.current;
     if (group === null) return;
-    const maskMaterial = new THREE.MeshBasicMaterial({ ...stencil });
     group.traverse((child) => {
       if (!(child instanceof THREE.Mesh)) return;
       if (!(child.material instanceof THREE.Material)) return;

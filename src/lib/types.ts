@@ -7,6 +7,7 @@ export type StyleProps = {
   alignItems: "start" | "center" | "end";
   justifyContent: "start" | "center" | "end";
   overflow: "hidden" | "auto" | "visible";
+  borderRadius: number | [topLeft: number, topRight: number, bottomRight: number, bottomLeft: number];
 };
 
 export type ContainerSize = {
@@ -18,6 +19,12 @@ export type SizeProps = {
   width?: number | `${number}%` | ((containerSize: ContainerSize) => number);
   height?: number | `${number}%` | ((containerSize: ContainerSize) => number);
   aspectRatio?: number;
+};
+
+export type ScrollerStyleProps = {
+  size: number;
+  trackColor: ColorRepresentation;
+  thumbColor: ColorRepresentation;
 };
 
 export type Position = [x?: number, y?: number, z?: number];

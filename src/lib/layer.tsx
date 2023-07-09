@@ -8,6 +8,7 @@ import useChildren from "@/lib/use-children";
 import useFlexbox, { calculateChildPosition } from "@/lib/use-flexbox";
 import useStyle from "@/lib/use-style";
 import useContextValue from "@/lib/use-context-value";
+import useRoundedPlane from "@/lib/use-rounded-plane";
 
 type Props = {
   width?: SizeProps["width"];
@@ -17,6 +18,8 @@ type Props = {
   style?: Partial<StyleProps>;
   position?: Position;
 };
+
+const SHAPE_DETAIL = 32;
 
 export default function Layer(props: Props) {
   const size = useSize(props.width, props.height, props.aspectRatio);
@@ -33,17 +36,19 @@ export default function Layer(props: Props) {
     });
   }, [children, style, size]);
 
+  const shape = useRoundedPlane(size, style);
+
   return (
     <LayerContext.Provider value={contextValue}>
       <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
         {["hidden", "auto"].includes(style.overflow) && (
           <Mask id={1}>
-            <planeGeometry args={[size.width, size.height]} />
+            <shapeGeometry args={[shape, SHAPE_DETAIL]} />
             <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
           </Mask>
         )}
         <mesh>
-          <planeGeometry args={[size.width, size.height]} />
+          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
           <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
         </mesh>
         {children.length > 0 && (

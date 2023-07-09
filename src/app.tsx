@@ -18,6 +18,7 @@ export default function App() {
           justifyContent: "start",
           gap: "5%",
           overflow: "auto",
+          borderRadius: 1,
         }}
       >
         {Array.from(Array(20)).map((_, index) => {
@@ -38,10 +39,11 @@ export default function App() {
         style={{
           backgroundColor: "crimson",
           flexDirection: "column-reverse",
-          alignItems: "center",
+          alignItems: "start",
           justifyContent: "start",
           gap: "5%",
           overflow: "auto",
+          borderRadius: [0.2, 0, 0, 0.1]
         }}
       >
         {Array.from(Array(20)).map((_, index) => {
