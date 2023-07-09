@@ -1,6 +1,7 @@
 import React from "react";
 
 export type LayerContextType = {
+  id: number;
   parent: null | {
     size: {
       width: number;
@@ -11,5 +12,6 @@ export type LayerContextType = {
 };
 
 export const LayerContext = React.createContext<LayerContextType>({
+  id: 1,
   parent: null,
 });

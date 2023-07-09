@@ -42,7 +42,7 @@ export default function Layer(props: Props) {
     <LayerContext.Provider value={contextValue}>
       <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
         {["hidden", "auto"].includes(style.overflow) && (
-          <Mask id={1}>
+          <Mask id={contextValue.id}>
             <shapeGeometry args={[shape, SHAPE_DETAIL]} />
             <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
           </Mask>

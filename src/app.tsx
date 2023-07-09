@@ -27,7 +27,7 @@ export default function App() {
               key={index}
               height="40%"
               aspectRatio={1}
-              style={{ backgroundColor: `rgb(${index * 30}, ${index * 30}, ${index * 10})` }}
+              style={{ backgroundColor: `hsl(${(index * 10) % 360}, 50%, 50%)` }}
             />
           );
         })}
@@ -38,12 +38,12 @@ export default function App() {
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
-          flexDirection: "column-reverse",
+          flexDirection: "row-reverse",
           alignItems: "start",
           justifyContent: "start",
           gap: "5%",
           overflow: "auto",
-          borderRadius: [0.2, 0, 0, 0.1]
+          borderRadius: [0.2, 0, 0, 0.1],
         }}
       >
         {Array.from(Array(20)).map((_, index) => {
@@ -52,7 +52,7 @@ export default function App() {
               key={index}
               height="40%"
               aspectRatio={1}
-              style={{ backgroundColor: `rgb(${index * 30}, ${index * 30}, ${index * 10})` }}
+              style={{ backgroundColor: `hsl(${(index * 10) % 360}, 50%, 50%)` }}
             />
           );
         })}

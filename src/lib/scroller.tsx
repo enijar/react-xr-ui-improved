@@ -79,9 +79,9 @@ export default function Scroller(props: Props) {
     thumbGroupY.position.y = (props.size.height - thumbSize.y) * -progressRef.current.y;
   });
 
-  const context = React.useContext(LayerContext);
+  const { id } = React.useContext(LayerContext);
 
-  const stencil = useMask(["hidden", "auto"].includes(props.overflow) ? 1 : 0);
+  const stencil = useMask(["hidden", "auto"].includes(props.overflow) ? id : 0);
 
   React.useEffect(() => {
     const group = groupRef.current;

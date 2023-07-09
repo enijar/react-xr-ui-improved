@@ -13,16 +13,16 @@ export default function useSize(
   height: SizeProps["width"],
   aspectRatio: SizeProps["aspectRatio"]
 ) {
-  const context = React.useContext(LayerContext);
+  const { parent } = React.useContext(LayerContext);
 
   const viewport = useThree((state) => state.viewport);
 
   const containerSize = React.useMemo(() => {
     return {
-      width: context.parent?.size?.width ?? viewport.width,
-      height: context.parent?.size?.height ?? viewport.height,
+      width: parent?.size?.width ?? viewport.width,
+      height: parent?.size?.height ?? viewport.height,
     };
-  }, [context.parent, viewport.width, viewport.height]);
+  }, [parent, viewport.width, viewport.height]);
 
   return React.useMemo(() => {
     return calculateSize({ width, height, aspectRatio }, containerSize);
