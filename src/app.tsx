@@ -28,12 +28,7 @@ export default function App() {
             overflow: "hidden",
           }}
         >
-          <Layer
-            width="50%"
-            aspectRatio={1}
-            style={{ backgroundColor: "white", borderRadius: 0.25 }}
-            position={[-0.1, 0.1, 0]}
-          />
+          <Layer width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[-0.1, 0.1, 0]} />
         </Layer>
       </Layer>
     </Canvas>
