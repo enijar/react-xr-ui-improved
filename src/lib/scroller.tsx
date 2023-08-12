@@ -83,24 +83,31 @@ export default function Scroller(props: Props) {
 
   const stencil = useMask(["hidden", "auto"].includes(props.overflow) ? id : 0);
 
+  function findClosestParent(object: THREE.Object3D, match: (object: THREE.Object3D) => boolean) {
+    while (object.parent) {
+      object = object.parent;
+      if (match(object)) {
+        return object;
+      }
+    }
+    return null;
+  }
+
   React.useEffect(() => {
     const group = groupRef.current;
     if (group === null) return;
     group.traverse((child) => {
       if (!(child instanceof THREE.Mesh)) return;
       if (!(child.material instanceof THREE.Material)) return;
-      child.material.stencilFail = stencil.stencilFail;
-      child.material.stencilFunc = stencil.stencilFunc;
-      child.material.stencilRef = stencil.stencilRef;
-      child.material.stencilWrite = stencil.stencilWrite;
-      child.material.stencilZFail = stencil.stencilZFail;
-      child.material.stencilZPass = stencil.stencilZPass;
+      Object.assign(child.material, stencil);
     });
   }, [props.children, stencil]);
 
   return (
     <>
-      <group ref={groupRef}>{props.children}</group>
+      <group ref={groupRef} name="react-xr-ui-scroller-group">
+        {props.children}
+      </group>
       {/* horizontal */}
       <group visible={props.enabled && overscrollSize.x > 0}>
         {/* track */}
@@ -132,6 +139,7 @@ export default function Scroller(props: Props) {
         {/* thumb */}
         <group ref={thumbGroupYRef}>
           <mesh
+            name="react-xr-ui-scroller"
             position-x={props.size.width / 2 - style.size / 2}
             position-y={props.size.height / 2 + thumbSize.y / -2}
             onPointerDown={() => {

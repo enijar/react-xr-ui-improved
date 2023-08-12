@@ -11,5 +11,5 @@ export default function useContextValue(children: React.ReactElement[], style: S
       id,
       parent: children === undefined ? null : { size, overflow },
     };
-  }, [id, children, size]);
+  }, [id, children, style.overflow, size]);
 }

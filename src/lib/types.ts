@@ -8,6 +8,7 @@ export type StyleProps = {
   justifyContent: "start" | "center" | "end";
   overflow: "hidden" | "auto" | "visible";
   borderRadius: number | [topLeft: number, topRight: number, bottomRight: number, bottomLeft: number];
+  zIndex: number;
 };
 
 export type ContainerSize = {

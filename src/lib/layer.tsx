@@ -36,6 +36,10 @@ export default function Layer(props: Props) {
     });
   }, [children, style, size]);
 
+  const renderOrder = React.useMemo(() => {
+    return contextValue.id + style.zIndex;
+  }, [contextValue.id, style.zIndex]);
+
   const shape = useRoundedPlane(size, style);
 
   return (
@@ -47,7 +51,7 @@ export default function Layer(props: Props) {
             <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
           </Mask>
         )}
-        <mesh>
+        <mesh renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
           <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
         </mesh>
