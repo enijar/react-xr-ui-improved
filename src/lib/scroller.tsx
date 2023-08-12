@@ -83,16 +83,6 @@ export default function Scroller(props: Props) {
 
   const stencil = useMask(["hidden", "auto"].includes(props.overflow) ? id : 0);
 
-  function findClosestParent(object: THREE.Object3D, match: (object: THREE.Object3D) => boolean) {
-    while (object.parent) {
-      object = object.parent;
-      if (match(object)) {
-        return object;
-      }
-    }
-    return null;
-  }
-
   React.useEffect(() => {
     const group = groupRef.current;
     if (group === null) return;

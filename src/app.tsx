@@ -5,11 +5,10 @@ import Layer from "@/lib/layer";
 
 export default function App() {
   return (
-    <Canvas flat linear gl={{ alpha: false, localClippingEnabled: true }}>
+    <Canvas flat linear gl={{ alpha: false }}>
       <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <OrbitControls />
       <Layer
-        position={[-1.25, 0, 0]}
         height={2}
         aspectRatio={1}
         style={{
