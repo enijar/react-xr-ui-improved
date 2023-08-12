@@ -19,51 +19,23 @@ export default function App() {
           overflow: "auto",
         }}
       >
-        {Array.from(Array(1)).map((_, index) => {
-          return (
-            <Layer
-              key={index}
-              height="50%"
-              aspectRatio={1}
-              position={[0.1, 0, 0]}
-              style={{
-                backgroundColor: `hsl(${(index * 10) % 360}, 50%, 50%)`,
-                overflow: "hidden",
-              }}
-            >
-              <Layer
-                width="50%"
-                aspectRatio={1}
-                style={{ backgroundColor: "#ffffff", borderRadius: 0.25 }}
-                position={[-0.1, 0.1, 0]}
-              />
-            </Layer>
-          );
-        })}
+        <Layer
+          height="50%"
+          aspectRatio={1}
+          position={[0.1, 0, 0]}
+          style={{
+            backgroundColor: "lightblue",
+            overflow: "hidden",
+          }}
+        >
+          <Layer
+            width="50%"
+            aspectRatio={1}
+            style={{ backgroundColor: "white", borderRadius: 0.25 }}
+            position={[-0.1, 0.1, 0]}
+          />
+        </Layer>
       </Layer>
-      {/*<Layer*/}
-      {/*  position={[1.25, 0, 0]}*/}
-      {/*  height={2}*/}
-      {/*  aspectRatio={1}*/}
-      {/*  style={{*/}
-      {/*    backgroundColor: "crimson",*/}
-      {/*    flexDirection: "row-reverse",*/}
-      {/*    gap: "5%",*/}
-      {/*    overflow: "auto",*/}
-      {/*    borderRadius: [0.2, 0, 0, 0.1],*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  {Array.from(Array(20)).map((_, index) => {*/}
-      {/*    return (*/}
-      {/*      <Layer*/}
-      {/*        key={index}*/}
-      {/*        height="40%"*/}
-      {/*        aspectRatio={1}*/}
-      {/*        style={{ backgroundColor: `hsl(${(index * 10) % 360}, 50%, 50%)` }}*/}
-      {/*      />*/}
-      {/*    );*/}
-      {/*  })}*/}
-      {/*</Layer>*/}
     </Canvas>
   );
 }
