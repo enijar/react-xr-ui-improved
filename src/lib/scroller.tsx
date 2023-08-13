@@ -1,9 +1,7 @@
 import React from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useMask } from "@react-three/drei";
 import type { ScrollerStyleProps, StyleProps } from "@/lib/types";
-import { LayerContext } from "@/lib/context";
 
 type Props = {
   children: React.ReactElement;
@@ -79,25 +77,9 @@ export default function Scroller(props: Props) {
     thumbGroupY.position.y = (props.size.height - thumbSize.y) * -progressRef.current.y;
   });
 
-  const { id } = React.useContext(LayerContext);
-
-  const stencil = useMask(["hidden", "auto"].includes(props.overflow) ? id : 0);
-
-  React.useEffect(() => {
-    const group = groupRef.current;
-    if (group === null) return;
-    group.traverse((child) => {
-      if (!(child instanceof THREE.Mesh)) return;
-      if (!(child.material instanceof THREE.Material)) return;
-      Object.assign(child.material, stencil);
-    });
-  }, [props.children, stencil]);
-
   return (
     <>
-      <group ref={groupRef} name="react-xr-ui-scroller-group">
-        {props.children}
-      </group>
+      <group ref={groupRef}>{props.children}</group>
       {/* horizontal */}
       <group visible={props.enabled && overscrollSize.x > 0}>
         {/* track */}

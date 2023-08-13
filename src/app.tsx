@@ -9,6 +9,7 @@ export default function App() {
       <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <OrbitControls />
       <Layer
+        id={1}
         height={2}
         aspectRatio={1}
         style={{
@@ -20,6 +21,7 @@ export default function App() {
         }}
       >
         <Layer
+          id={2}
           height="50%"
           aspectRatio={1}
           position={[0.1, 0, 0]}
@@ -28,7 +30,7 @@ export default function App() {
             overflow: "hidden",
           }}
         >
-          <Layer width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[-0.1, 0.1, 0]} />
+          <Layer id={3} width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[-0.1, 0.1, 0]} />
         </Layer>
       </Layer>
     </Canvas>
