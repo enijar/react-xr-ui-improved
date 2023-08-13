@@ -1,5 +1,5 @@
 import React from "react";
-import { useMask } from "@react-three/drei";
+import * as THREE from "three";
 
 export type LayerContextType = {
   id: number;
@@ -10,11 +10,14 @@ export type LayerContextType = {
     };
     overflow: "hidden" | "auto" | "visible";
   };
-  mask: null | ReturnType<typeof useMask>;
+  mask: null | { stencilFunc: THREE.StencilFunc; stencilRef: number };
 };
 
 export const LayerContext = React.createContext<LayerContextType>({
   id: 1,
   parent: null,
-  mask: null,
+  mask: {
+    stencilFunc: THREE.EqualStencilFunc,
+    stencilRef: 1,
+  },
 });

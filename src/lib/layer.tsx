@@ -1,4 +1,5 @@
 import React from "react";
+import * as THREE from "three";
 import { Mask, useMask } from "@react-three/drei";
 import useSize, { calculateChildrenSize } from "@/lib/use-size";
 import { LayerContext } from "@/lib/context";
@@ -42,11 +43,13 @@ export default function Layer(props: Props) {
 
   const shape = useRoundedPlane(size, style);
 
-  const { mask } = React.useContext(LayerContext);
+  const { id } = React.useContext(LayerContext);
+  const mask = useMask(id);
 
   return (
     <LayerContext.Provider value={contextValue}>
       <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
+        {/* mask from parent */}
         <mesh renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
           <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} {...(mask ?? {})} />
@@ -70,10 +73,19 @@ export default function Layer(props: Props) {
                 })}
               </group>
             </Scroller>
-            <Mask id={contextValue.id} renderOrder={renderOrder}>
+            {/* mask for children */}
+            <mesh renderOrder={renderOrder}>
               <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-              <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
-            </Mask>
+              <meshBasicMaterial
+                color={style.backgroundColor}
+                depthWrite={false}
+                transparent={true}
+                stencilWrite={true}
+                stencilFunc={THREE.AlwaysStencilFunc}
+                stencilRef={contextValue.id}
+                stencilZPass={THREE.ReplaceStencilOp}
+              />
+            </mesh>
           </>
         )}
       </group>

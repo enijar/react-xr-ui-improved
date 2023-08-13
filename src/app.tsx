@@ -55,7 +55,7 @@ export default function App() {
             overflow: "hidden",
           }}
         >
-          <Layer width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[-0.2, 0.1, 0]} />
+          <Layer width="100%" height="50%" style={{ backgroundColor: "white" }} position={[-0.2, 0.1, 0]} />
         </Layer>
       </Layer>
     </Canvas>
