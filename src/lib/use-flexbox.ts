@@ -7,16 +7,13 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
     if (children.length === 0) {
       return { x: 0, y: 0 };
     }
-    const flexDirection = style.flexDirection;
-    const alignItems = style.alignItems;
-    const justifyContent = style.justifyContent;
     const childrenSize = calculateChildrenSize(children, containerSize, style);
     let x = 0;
     let y = 0;
-    switch (flexDirection) {
+    switch (style.flexDirection) {
       case "row":
       case "row-reverse":
-        switch (alignItems) {
+        switch (style.alignItems) {
           case "start":
             y = containerSize.height / 2 - childrenSize.height / 2;
             break;
@@ -27,7 +24,7 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
             y = containerSize.height / -2 + childrenSize.height / 2;
             break;
         }
-        switch (justifyContent) {
+        switch (style.justifyContent) {
           case "start":
             x = containerSize.width / -2;
             break;
@@ -41,7 +38,7 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
         break;
       case "column":
       case "column-reverse":
-        switch (alignItems) {
+        switch (style.alignItems) {
           case "start":
             x = containerSize.width / -2 + childrenSize.width / 2;
             break;
@@ -52,7 +49,7 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
             x = containerSize.width / 2 - childrenSize.width / 2;
             break;
         }
-        switch (justifyContent) {
+        switch (style.justifyContent) {
           case "start":
             y = containerSize.height / 2;
             break;
@@ -66,7 +63,15 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
         break;
     }
     return { x, y };
-  }, [containerSize, children, style]);
+  }, [
+    containerSize.width,
+    containerSize.height,
+    children,
+    style.flexDirection,
+    style.alignItems,
+    style.justifyContent,
+    style.gap,
+  ]);
 }
 
 export function calculateChildPosition(

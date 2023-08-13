@@ -9,13 +9,14 @@ export default function App() {
       <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <OrbitControls />
       <Layer
-        position={[-2, 0, 0]}
-        height={1}
+        position={[-1.5, 0, 0]}
+        height={2}
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
-          flexDirection: "column-reverse",
-          alignItems: "end",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
           gap: "5%",
           overflow: "auto",
         }}
@@ -23,7 +24,6 @@ export default function App() {
         <Layer
           height="50%"
           aspectRatio={1}
-          position={[0.4, 0, 0]}
           style={{
             backgroundColor: "lightblue",
             overflow: "hidden",
@@ -34,13 +34,14 @@ export default function App() {
       </Layer>
 
       <Layer
-        position={[0, 0, 0]}
-        height={1}
+        position={[1.5, 0, 0]}
+        height={2}
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
-          flexDirection: "column-reverse",
-          alignItems: "end",
+          flexDirection: "column",
+          alignItems: "start",
+          justifyContent: "end",
           gap: "5%",
           overflow: "auto",
         }}
@@ -48,32 +49,7 @@ export default function App() {
         <Layer
           height="50%"
           aspectRatio={1}
-          position={[0.4, 0, 0]}
-          style={{
-            backgroundColor: "lightblue",
-            overflow: "hidden",
-          }}
-        >
-          <Layer width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[-0.2, 0.1, 0]} />
-        </Layer>
-      </Layer>
-
-      <Layer
-        position={[2, 0, 0]}
-        height={1}
-        aspectRatio={1}
-        style={{
-          backgroundColor: "crimson",
-          flexDirection: "column-reverse",
-          alignItems: "end",
-          gap: "5%",
-          overflow: "auto",
-        }}
-      >
-        <Layer
-          height="50%"
-          aspectRatio={1}
-          position={[0.4, 0, 0]}
+          position={[-0.1, 0, 0]}
           style={{
             backgroundColor: "lightblue",
             overflow: "hidden",

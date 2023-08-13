@@ -42,6 +42,8 @@ export default function Layer(props: Props) {
 
   const shape = useRoundedPlane(size, style);
 
+  const { parent } = React.useContext(LayerContext);
+
   const mask = useMask(contextValue.id - 1);
 
   return (
@@ -53,7 +55,7 @@ export default function Layer(props: Props) {
             color={style.backgroundColor}
             depthWrite={false}
             transparent={true}
-            {...([1, 4, 7].includes(contextValue.id) ? {} : mask)}
+            {...(parent === null ? {} : mask)}
           />
         </mesh>
         {children.length > 0 && (
