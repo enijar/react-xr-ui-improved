@@ -17,7 +17,6 @@ type Props = {
   children?: React.ReactNode;
   style?: Partial<StyleProps>;
   position?: Position;
-  id?: number;
 };
 
 const SHAPE_DETAIL = 32;
@@ -43,7 +42,7 @@ export default function Layer(props: Props) {
 
   const shape = useRoundedPlane(size, style);
 
-  const mask = useMask((props.id ?? 0) - 1);
+  const mask = useMask(contextValue.id - 1);
 
   return (
     <LayerContext.Provider value={contextValue}>
@@ -54,13 +53,9 @@ export default function Layer(props: Props) {
             color={style.backgroundColor}
             depthWrite={false}
             transparent={true}
-            {...((props.id ?? 0) > 0 ? mask : {})}
+            {...([1, 4, 7].includes(contextValue.id) ? {} : mask)}
           />
         </mesh>
-        <Mask id={contextValue.id} renderOrder={renderOrder}>
-          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
-        </Mask>
         {children.length > 0 && (
           <Scroller
             size={size}
@@ -80,6 +75,10 @@ export default function Layer(props: Props) {
             </group>
           </Scroller>
         )}
+        <Mask id={contextValue.id} renderOrder={renderOrder}>
+          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
+          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
+        </Mask>
       </group>
     </LayerContext.Provider>
   );
