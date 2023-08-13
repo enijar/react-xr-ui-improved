@@ -42,45 +42,40 @@ export default function Layer(props: Props) {
 
   const shape = useRoundedPlane(size, style);
 
-  const { parent } = React.useContext(LayerContext);
-
-  const mask = useMask(contextValue.id - 1);
+  const { mask } = React.useContext(LayerContext);
 
   return (
     <LayerContext.Provider value={contextValue}>
       <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
         <mesh renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-          <meshBasicMaterial
-            color={style.backgroundColor}
-            depthWrite={false}
-            transparent={true}
-            {...(parent === null ? {} : mask)}
-          />
+          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} {...(mask ?? {})} />
         </mesh>
         {children.length > 0 && (
-          <Scroller
-            size={size}
-            childrenSize={childrenSize}
-            enabled={style.overflow === "auto"}
-            overflow={style.overflow}
-          >
-            <group position-x={flexbox.x} position-y={flexbox.y}>
-              {children.map((child, index) => {
-                const position = childrenPositions[index];
-                return (
-                  <group key={index} position-x={position.x} position-y={position.y}>
-                    {child}
-                  </group>
-                );
-              })}
-            </group>
-          </Scroller>
+          <>
+            <Scroller
+              size={size}
+              childrenSize={childrenSize}
+              enabled={style.overflow === "auto"}
+              overflow={style.overflow}
+            >
+              <group position-x={flexbox.x} position-y={flexbox.y}>
+                {children.map((child, index) => {
+                  const position = childrenPositions[index];
+                  return (
+                    <group key={index} position-x={position.x} position-y={position.y}>
+                      {child}
+                    </group>
+                  );
+                })}
+              </group>
+            </Scroller>
+            <Mask id={contextValue.id} renderOrder={renderOrder}>
+              <shapeGeometry args={[shape, SHAPE_DETAIL]} />
+              <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
+            </Mask>
+          </>
         )}
-        <Mask id={contextValue.id} renderOrder={renderOrder}>
-          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} />
-        </Mask>
       </group>
     </LayerContext.Provider>
   );

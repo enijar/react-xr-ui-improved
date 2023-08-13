@@ -49,7 +49,7 @@ export default function App() {
         <Layer
           height="50%"
           aspectRatio={1}
-          position={[-0.1, 0, 0]}
+          position={[-0.5, 0, 0]}
           style={{
             backgroundColor: "lightblue",
             overflow: "hidden",
