@@ -5,11 +5,12 @@ export default function useChildren(children: React.ReactNode, style: StyleProps
   return React.useMemo(() => {
     if (children === undefined) return [];
     const flexDirection = style.flexDirection ?? "row";
-    const elements: React.ReactElement[] = Array.isArray(children) ? children : [children];
+    let elements: React.ReactElement[] = Array.isArray(children) ? children : [children];
+    elements = elements.filter((element) => React.isValidElement(element));
     switch (flexDirection) {
       case "row-reverse":
       case "column-reverse":
-        return [...elements].reverse();
+        return elements.reverse();
       default:
         return elements;
     }
