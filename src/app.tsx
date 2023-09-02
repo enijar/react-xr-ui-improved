@@ -9,53 +9,26 @@ export default function App() {
       <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <OrbitControls />
       <Layer
-        position={[-1.5, 0, 0]}
         height={2}
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
           gap: "5%",
           overflow: "auto",
+          borderRadius: 0.1,
         }}
       >
         <Layer
+          position={[-0.2, 0.2, 0]}
           height="50%"
           aspectRatio={1}
           style={{
             backgroundColor: "lightblue",
-            overflow: "hidden",
+            alignItems: "end",
           }}
         >
-          <Layer width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[-0.2, 0.1, 0]} />
-        </Layer>
-      </Layer>
-
-      <Layer
-        position={[1.5, 0, 0]}
-        height={2}
-        aspectRatio={1}
-        style={{
-          backgroundColor: "crimson",
-          flexDirection: "column",
-          alignItems: "start",
-          justifyContent: "end",
-          gap: "5%",
-          overflow: "auto",
-        }}
-      >
-        <Layer
-          height="50%"
-          aspectRatio={1}
-          position={[-0.5, 0, 0]}
-          style={{
-            backgroundColor: "lightblue",
-            overflow: "hidden",
-          }}
-        >
-          <Layer width="100%" height="50%" style={{ backgroundColor: "white" }} position={[-0.2, 0.1, 0]} />
+          <Layer width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[0.2, 0.1, 0]} />
         </Layer>
       </Layer>
     </Canvas>
