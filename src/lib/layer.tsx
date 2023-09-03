@@ -23,7 +23,19 @@ type Props = {
 
 const SHAPE_DETAIL = 32;
 
-export default function Layer(props: Props) {
+export type LayerRef = {
+  group: React.RefObject<THREE.Group>["current"];
+};
+
+function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
+  const groupRef = React.useRef<THREE.Group>(null);
+
+  React.useImperativeHandle(ref, () => {
+    return {
+      group: groupRef.current,
+    };
+  });
+
   const size = useSize(props.width, props.height, props.aspectRatio);
   const style = useStyle(props.style);
   const children = useChildren(props.children, style);
@@ -97,7 +109,12 @@ export default function Layer(props: Props) {
 
   return (
     <LayerContext.Provider value={contextValue}>
-      <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
+      <group
+        ref={groupRef}
+        position-x={props.position?.[0]}
+        position-y={props.position?.[1]}
+        position-z={props.position?.[2]}
+      >
         {/* mask for parent */}
         <mesh renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
@@ -162,3 +179,5 @@ export default function Layer(props: Props) {
     </LayerContext.Provider>
   );
 }
+
+export default React.forwardRef(Layer);
