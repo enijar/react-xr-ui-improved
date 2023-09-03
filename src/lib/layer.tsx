@@ -1,6 +1,6 @@
 import React from "react";
 import * as THREE from "three";
-import { Mask, useMask } from "@react-three/drei";
+import { Text } from "@react-three/drei";
 import useSize, { calculateChildrenSize } from "@/lib/use-size";
 import { LayerContext } from "@/lib/context";
 import type { Position, SizeProps, StyleProps } from "@/lib/types";
@@ -18,6 +18,7 @@ type Props = {
   children?: React.ReactNode;
   style?: Partial<StyleProps>;
   position?: Position;
+  text?: string;
 };
 
 const SHAPE_DETAIL = 32;
@@ -43,51 +44,114 @@ export default function Layer(props: Props) {
 
   const shape = useRoundedPlane(size, style);
 
-  const { id } = React.useContext(LayerContext);
-  const mask = useMask(id);
+  const { id, parent } = React.useContext(LayerContext);
+
+  const childrenMask = React.useMemo(() => {
+    if (contextValue.parent !== null && contextValue.parent.hasMask) {
+      return {
+        stencilWrite: true,
+        stencilRef: id,
+        stencilFunc: THREE.EqualStencilFunc,
+        stencilFail: THREE.KeepStencilOp,
+        stencilZFail: THREE.KeepStencilOp,
+        stencilZPass: THREE.KeepStencilOp,
+      };
+    }
+    return {};
+  }, [id, parent]);
+
+  const [textSize, setTextSize] = React.useState({ width: 0, height: 0 });
+
+  const textAnchor = React.useMemo(() => {
+    let x: number | "left" | "center" | "right" = 0;
+    let y: number | "top" | "top-baseline" | "middle" | "bottom-baseline" | "bottom" = 0;
+    switch (style.textAlign) {
+      case "left":
+        x = size.width / 2;
+        break;
+      case "center":
+      case "justify":
+        x = "center";
+        break;
+      case "right":
+        x = size.width / -2 + textSize.width;
+        break;
+    }
+    switch (style.verticalAlign) {
+      case "top":
+        y = size.height / -2;
+        break;
+      case "middle":
+        y = "middle";
+        break;
+      case "bottom":
+        y = size.height / 2 - textSize.height;
+        break;
+    }
+    return { x, y };
+  }, [style.textAlign, style.verticalAlign, textSize]);
+
+  const textMaterial = React.useMemo(() => {
+    return new THREE.MeshBasicMaterial({ depthWrite: false, transparent: true, side: THREE.FrontSide });
+  }, []);
 
   return (
     <LayerContext.Provider value={contextValue}>
       <group position-x={props.position?.[0]} position-y={props.position?.[1]} position-z={props.position?.[2]}>
-        {/* mask from parent */}
+        {/* mask for parent */}
         <mesh renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} {...(mask ?? {})} />
+          <meshBasicMaterial
+            color={style.backgroundColor}
+            depthWrite={false}
+            transparent={true}
+            {...contextValue.mask}
+          />
         </mesh>
-        {children.length > 0 && (
-          <>
-            <Scroller
-              size={size}
-              childrenSize={childrenSize}
-              enabled={style.overflow === "auto"}
-              overflow={style.overflow}
-            >
-              <group position-x={flexbox.x} position-y={flexbox.y}>
-                {children.map((child, index) => {
-                  const position = childrenPositions[index];
-                  return (
-                    <group key={index} position-x={position.x} position-y={position.y}>
-                      {child}
-                    </group>
-                  );
-                })}
-              </group>
-            </Scroller>
-            {/* mask for children */}
-            <mesh renderOrder={renderOrder}>
-              <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-              <meshBasicMaterial
-                color={style.backgroundColor}
-                depthWrite={false}
-                transparent={true}
-                stencilWrite={true}
-                stencilFunc={THREE.AlwaysStencilFunc}
-                stencilRef={contextValue.id}
-                stencilZPass={THREE.ReplaceStencilOp}
-              />
-            </mesh>
-          </>
-        )}
+        <Scroller size={size} childrenSize={childrenSize} enabled={style.overflow === "auto"} overflow={style.overflow}>
+          <group position-x={flexbox.x} position-y={flexbox.y}>
+            {props.text !== undefined && (
+              <Text
+                maxWidth={size.width}
+                color={style.color}
+                fontSize={style.fontSize}
+                renderOrder={renderOrder}
+                anchorX={textAnchor.x}
+                anchorY={textAnchor.y}
+                textAlign={style.textAlign}
+                lineHeight={style.lineHeight}
+                material={textMaterial}
+                onSync={(troika) => {
+                  const box = troika.geometry.boundingBox;
+                  if (box === null) return;
+                  const width = box.max.x - box.min.x;
+                  const height = box.max.y - box.min.y;
+                  setTextSize((textSize) => {
+                    if (textSize.width === width && textSize.height === height) {
+                      return textSize;
+                    }
+                    return { width, height };
+                  });
+                }}
+              >
+                {props.text}
+              </Text>
+            )}
+            {children.map((child, index) => {
+              const position = childrenPositions[index];
+              return (
+                <group key={index} position-x={position.x} position-y={position.y} renderOrder={renderOrder}>
+                  {child}
+                </group>
+              );
+            })}
+          </group>
+        </Scroller>
+        {/* mask for children */}
+        <mesh renderOrder={renderOrder}>
+          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
+          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} {...childrenMask} />
+        </mesh>
       </group>
     </LayerContext.Provider>
   );

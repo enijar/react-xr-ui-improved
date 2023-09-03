@@ -1,6 +1,6 @@
 import React from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera, Text } from "@react-three/drei";
 import Layer from "@/lib/layer";
 
 export default function App() {
@@ -13,24 +13,17 @@ export default function App() {
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
-          flexDirection: "column",
           gap: "5%",
           overflow: "auto",
           borderRadius: 0.1,
+          lineHeight: 1.2,
+          color: "#ffffff",
+          verticalAlign: "middle",
+          textAlign: "center",
+          fontSize: 0.2,
         }}
-      >
-        <Layer
-          position={[-0.2, 0.2, 0]}
-          height="50%"
-          aspectRatio={1}
-          style={{
-            backgroundColor: "lightblue",
-            alignItems: "end",
-          }}
-        >
-          <Layer width="50%" aspectRatio={1} style={{ backgroundColor: "white" }} position={[0.2, 0.1, 0]} />
-        </Layer>
-      </Layer>
+        text={`This is some text \non a new line.`}
+      />
     </Canvas>
   );
 }

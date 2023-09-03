@@ -9,6 +9,11 @@ export type StyleProps = {
   overflow: "hidden" | "auto" | "visible";
   borderRadius: number | [topLeft: number, topRight: number, bottomRight: number, bottomLeft: number];
   zIndex: number;
+  color: ColorRepresentation;
+  fontSize: number;
+  textAlign: "center" | "left" | "right" | "justify";
+  lineHeight: number;
+  verticalAlign: "top" | "middle" | "bottom";
 };
 
 export type ContainerSize = {

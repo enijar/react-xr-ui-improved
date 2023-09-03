@@ -11,7 +11,7 @@ const DEFAULT_PROPS: SizeProps = {
 export default function useSize(
   width: SizeProps["width"],
   height: SizeProps["width"],
-  aspectRatio: SizeProps["aspectRatio"]
+  aspectRatio: SizeProps["aspectRatio"],
 ) {
   const { parent } = React.useContext(LayerContext);
 
@@ -61,6 +61,12 @@ export function calculateChildrenSize(children: Children, containerSize: Contain
   const gapSize = calculateSize({ width: style.gap, height: style.gap }, containerSize);
   let width = Math.max(...children.map((child) => calculateChildSize(child, containerSize).width));
   let height = Math.max(...children.map((child) => calculateChildSize(child, containerSize).height));
+  if (width === -Infinity) {
+    width = 0;
+  }
+  if (height === -Infinity) {
+    height = 0;
+  }
   if (["row", "row-reverse"].includes(style.flexDirection)) {
     width = children.reduce((width, child, index) => {
       const size = calculateChildSize(child, containerSize);
@@ -79,6 +85,6 @@ export function calculateChildrenSize(children: Children, containerSize: Contain
 export function calculateChildSize(child: React.ReactElement<SizeProps>, containerSize: ContainerSize) {
   return calculateSize(
     { width: child.props?.width, height: child.props?.height, aspectRatio: child.props?.aspectRatio },
-    containerSize
+    containerSize,
   );
 }

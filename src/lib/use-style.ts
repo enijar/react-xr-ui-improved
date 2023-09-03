@@ -13,6 +13,11 @@ export default function useStyle(style?: Partial<StyleProps>) {
       overflow: props.overflow ?? "visible",
       borderRadius: props.borderRadius ?? 0,
       zIndex: props.zIndex ?? 0,
+      color: props.color ?? "#000000",
+      fontSize: props.fontSize ?? 0.1,
+      textAlign: props.textAlign ?? "left",
+      lineHeight: props.lineHeight ?? 1,
+      verticalAlign: props.verticalAlign ?? "top",
     };
   }, [style]);
 }

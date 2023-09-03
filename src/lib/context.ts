@@ -9,15 +9,23 @@ export type LayerContextType = {
       height: number;
     };
     overflow: "hidden" | "auto" | "visible";
+    hasMask: boolean;
+    id: number;
   };
-  mask: null | { stencilFunc: THREE.StencilFunc; stencilRef: number };
+  mask:
+    | {}
+    | {
+        stencilWrite: boolean;
+        stencilRef: number;
+        stencilFunc: THREE.StencilFunc;
+        stencilFail: THREE.StencilOp;
+        stencilZFail: THREE.StencilOp;
+        stencilZPass: THREE.StencilOp;
+      };
 };
 
 export const LayerContext = React.createContext<LayerContextType>({
   id: 1,
   parent: null,
-  mask: {
-    stencilFunc: THREE.EqualStencilFunc,
-    stencilRef: 1,
-  },
+  mask: {},
 });

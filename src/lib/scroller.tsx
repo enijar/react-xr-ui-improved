@@ -37,10 +37,15 @@ export default function Scroller(props: Props) {
   }, [props.childrenSize, props.size]);
 
   const thumbSize = React.useMemo(() => {
-    return {
-      x: Math.max(props.size.width * 0.05, props.size.width * (props.size.width / props.childrenSize.width)),
-      y: Math.max(props.size.height * 0.05, props.size.height * (props.size.height / props.childrenSize.height)),
-    };
+    let x = Math.max(props.size.width * 0.05, props.size.width * (props.size.width / props.childrenSize.width));
+    let y = Math.max(props.size.height * 0.05, props.size.height * (props.size.height / props.childrenSize.height));
+    if (x === Infinity) {
+      x = 0;
+    }
+    if (y === Infinity) {
+      y = 0;
+    }
+    return { x, y };
   }, [props.size, props.childrenSize, overscrollSize]);
 
   React.useEffect(() => {

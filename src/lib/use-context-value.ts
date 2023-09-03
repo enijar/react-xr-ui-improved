@@ -1,23 +1,31 @@
 import React from "react";
-import * as THREE from "three";
 import type { LayerContextType } from "@/lib/context";
 import type { ContainerSize, StyleProps } from "@/lib/types";
 import { generateUniqueId } from "@/lib/utils";
+import * as THREE from "three";
+import { LayerContext } from "@/lib/context";
 
 export default function useContextValue(children: React.ReactElement[], style: StyleProps, size: ContainerSize) {
+  const { parent } = React.useContext(LayerContext);
   const id = React.useMemo(() => generateUniqueId(), []);
-  const mask = React.useMemo(() => {
-    return {
-      stencilFunc: THREE.EqualStencilFunc,
-      stencilRef: id,
-    };
-  }, [id]);
   return React.useMemo<LayerContextType>(() => {
-    const overflow = style.overflow;
+    let hasMask = style.overflow !== "visible";
+    if (parent !== null && parent.hasMask) {
+      hasMask = false;
+    }
     return {
       id,
-      parent: { size, overflow },
-      mask,
+      parent: { size, overflow: style.overflow, hasMask, id },
+      mask: !hasMask
+        ? {}
+        : {
+            stencilWrite: true,
+            stencilRef: id,
+            stencilFunc: THREE.AlwaysStencilFunc,
+            stencilFail: THREE.ReplaceStencilOp,
+            stencilZFail: THREE.ReplaceStencilOp,
+            stencilZPass: THREE.ReplaceStencilOp,
+          },
     };
-  }, [id, children, style.overflow, size, mask]);
+  }, [id, children, style.overflow, size, parent]);
 }
