@@ -29,6 +29,14 @@ export default function useSize(
   }, [width, height, aspectRatio, containerSize]);
 }
 
+export function calculateScaledSize(value: number | `${number}%`, scaleTo: number) {
+  if (typeof value === "string") {
+    const ratio = parseFloat(value) / 100;
+    return scaleTo * ratio;
+  }
+  return value;
+}
+
 export function calculateSize(props: SizeProps, containerSize: ContainerSize) {
   let width = props.width ?? DEFAULT_PROPS.width;
   let height = props.height ?? DEFAULT_PROPS.height;

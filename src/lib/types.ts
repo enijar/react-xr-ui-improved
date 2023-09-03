@@ -1,9 +1,12 @@
 import type { ColorRepresentation } from "three";
 
+export type ScaledValue = number | `${number}%`;
+
 export type StyleProps = {
   backgroundColor: ColorRepresentation;
+  opacity: number;
   flexDirection: "row" | "row-reverse" | "column" | "column-reverse";
-  gap: number | `${number}%`;
+  gap: ScaledValue;
   alignItems: "start" | "center" | "end";
   justifyContent: "start" | "center" | "end";
   overflow: "hidden" | "auto" | "visible";
@@ -11,15 +14,15 @@ export type StyleProps = {
   zIndex: number;
   color: ColorRepresentation;
   fontFamily: string;
-  fontSize: number;
+  fontSize: ScaledValue;
   textAlign: "center" | "left" | "right" | "justify";
   lineHeight: number;
   verticalAlign: "top" | "middle" | "bottom";
-  outlineWidth: number;
+  outlineWidth: ScaledValue;
   outlineColor: ColorRepresentation;
   outlineOpacity: number;
-  outlineOffsetX: number;
-  outlineOffsetY: number;
+  outlineOffsetX: ScaledValue;
+  outlineOffsetY: ScaledValue;
 };
 
 export type ContainerSize = {

@@ -20,10 +20,18 @@ export default function App() {
   });
 
   return (
-    <>
+    <Layer
+      width={4}
+      height={2}
+      style={{
+        gap: "2%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Layer
-        position={[-1.1, 0, 0]}
-        height={2}
+        width="47%"
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
@@ -34,14 +42,12 @@ export default function App() {
           verticalAlign: "middle",
           textAlign: "center",
           fontFamily: "./fonts/roboto-slab-regular.woff",
-          fontSize: 0.2,
-          outlineWidth: 0.01,
+          fontSize: "10%",
         }}
         text={`This is some text \non a new line.`}
       />
       <Layer
-        position={[1.1, 0, 0]}
-        height={2}
+        width="47%"
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
@@ -69,6 +75,6 @@ export default function App() {
           />
         </Layer>
       </Layer>
-    </>
+    </Layer>
   );
 }

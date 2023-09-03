@@ -5,7 +5,8 @@ export default function useStyle(style?: Partial<StyleProps>) {
   return React.useMemo<StyleProps>(() => {
     const props = style ?? {};
     return {
-      backgroundColor: props.backgroundColor ?? "#ffffff",
+      backgroundColor: props.backgroundColor ?? "transparent",
+      opacity: props.opacity ?? 1,
       flexDirection: props.flexDirection ?? "column",
       gap: props.gap ?? 0,
       alignItems: props.alignItems ?? "start",

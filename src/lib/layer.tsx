@@ -1,7 +1,7 @@
 import React from "react";
 import * as THREE from "three";
 import { Text } from "@react-three/drei";
-import useSize, { calculateChildrenSize } from "@/lib/use-size";
+import useSize, { calculateChildrenSize, calculateScaledSize } from "@/lib/use-size";
 import { LayerContext } from "@/lib/context";
 import type { Position, SizeProps, StyleProps } from "@/lib/types";
 import Scroller from "@/lib/scroller";
@@ -56,22 +56,6 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
 
   const shape = useRoundedPlane(size, style);
 
-  const { id, parent } = React.useContext(LayerContext);
-
-  const childrenMask = React.useMemo(() => {
-    if (contextValue.parent !== null && contextValue.parent.hasMask) {
-      return {
-        stencilWrite: true,
-        stencilRef: id,
-        stencilFunc: THREE.EqualStencilFunc,
-        stencilFail: THREE.KeepStencilOp,
-        stencilZFail: THREE.KeepStencilOp,
-        stencilZPass: THREE.KeepStencilOp,
-      };
-    }
-    return {};
-  }, [id, parent]);
-
   const [textSize, setTextSize] = React.useState({ width: 0, height: 0 });
 
   const textAnchor = React.useMemo(() => {
@@ -107,6 +91,23 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
     return new THREE.MeshBasicMaterial({ depthWrite: false, transparent: true, side: THREE.FrontSide });
   }, []);
 
+  const fontSize = React.useMemo(() => {
+    const smallestDimension = Math.min(size.width, size.height);
+    return calculateScaledSize(style.fontSize, smallestDimension);
+  }, [style.fontSize, size]);
+
+  const outlineWidth = React.useMemo(() => {
+    return calculateScaledSize(style.outlineWidth, fontSize);
+  }, [style.outlineWidth, fontSize]);
+
+  const outlineOffsetX = React.useMemo(() => {
+    return calculateScaledSize(style.outlineOffsetX, fontSize);
+  }, [style.outlineOffsetX, fontSize]);
+
+  const outlineOffsetY = React.useMemo(() => {
+    return calculateScaledSize(style.outlineOffsetY, fontSize);
+  }, [style.outlineOffsetY, fontSize]);
+
   return (
     <LayerContext.Provider value={contextValue}>
       <group
@@ -119,9 +120,10 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         <mesh renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
           <meshBasicMaterial
-            color={style.backgroundColor}
+            color={style.backgroundColor === "transparent" ? "#ffffff" : style.backgroundColor}
             depthWrite={false}
             transparent={true}
+            opacity={style.backgroundColor === "transparent" ? 0 : style.opacity}
             {...contextValue.mask}
           />
         </mesh>
@@ -129,18 +131,18 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
           <Text
             maxWidth={size.width}
             color={style.color}
-            fontSize={style.fontSize}
+            fontSize={fontSize}
             renderOrder={renderOrder}
             anchorX={textAnchor.x}
             anchorY={textAnchor.y}
             font={style.fontFamily}
             textAlign={style.textAlign}
             lineHeight={style.lineHeight}
-            outlineWidth={style.outlineWidth}
+            outlineWidth={outlineWidth}
             outlineColor={style.outlineColor}
             outlineOpacity={style.outlineOpacity}
-            outlineOffsetX={style.outlineOffsetX}
-            outlineOffsetY={style.outlineOffsetY}
+            outlineOffsetX={outlineOffsetX}
+            outlineOffsetY={outlineOffsetY}
             material={textMaterial}
             onSync={(troika) => {
               const box = troika.geometry.boundingBox;
@@ -171,10 +173,16 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
           </group>
         </Scroller>
         {/* mask for children */}
-        <mesh renderOrder={renderOrder}>
-          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-          <meshBasicMaterial color={style.backgroundColor} depthWrite={false} transparent={true} {...childrenMask} />
-        </mesh>
+        {/*<mesh renderOrder={renderOrder}>*/}
+        {/*  <shapeGeometry args={[shape, SHAPE_DETAIL]} />*/}
+        {/*  <meshBasicMaterial*/}
+        {/*    color={style.backgroundColor === "transparent" ? "#ffffff" : style.backgroundColor}*/}
+        {/*    depthWrite={false}*/}
+        {/*    transparent={true}*/}
+        {/*    opacity={style.backgroundColor === "transparent" ? 0 : style.opacity}*/}
+        {/*    {...childrenMask}*/}
+        {/*  />*/}
+        {/*</mesh>*/}
       </group>
     </LayerContext.Provider>
   );
