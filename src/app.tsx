@@ -27,7 +27,6 @@ export default function App() {
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
-          gap: "5%",
           overflow: "auto",
           borderRadius: 0.1,
           lineHeight: 1.2,
@@ -46,7 +45,6 @@ export default function App() {
         aspectRatio={1}
         style={{
           backgroundColor: "crimson",
-          gap: "5%",
           overflow: "auto",
           borderRadius: 0.1,
           alignItems: "center",
