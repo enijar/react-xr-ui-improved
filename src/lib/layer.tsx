@@ -108,41 +108,41 @@ export default function Layer(props: Props) {
             {...contextValue.mask}
           />
         </mesh>
+        {props.text !== undefined && (
+          <Text
+            maxWidth={size.width}
+            color={style.color}
+            fontSize={style.fontSize}
+            renderOrder={renderOrder}
+            anchorX={textAnchor.x}
+            anchorY={textAnchor.y}
+            font={style.fontFamily}
+            textAlign={style.textAlign}
+            lineHeight={style.lineHeight}
+            outlineWidth={style.outlineWidth}
+            outlineColor={style.outlineColor}
+            outlineOpacity={style.outlineOpacity}
+            outlineOffsetX={style.outlineOffsetX}
+            outlineOffsetY={style.outlineOffsetY}
+            material={textMaterial}
+            onSync={(troika) => {
+              const box = troika.geometry.boundingBox;
+              if (box === null) return;
+              const width = box.max.x - box.min.x;
+              const height = box.max.y - box.min.y;
+              setTextSize((textSize) => {
+                if (textSize.width === width && textSize.height === height) {
+                  return textSize;
+                }
+                return { width, height };
+              });
+            }}
+          >
+            {props.text}
+          </Text>
+        )}
         <Scroller size={size} childrenSize={childrenSize} enabled={style.overflow === "auto"} overflow={style.overflow}>
           <group position-x={flexbox.x} position-y={flexbox.y}>
-            {props.text !== undefined && (
-              <Text
-                maxWidth={size.width}
-                color={style.color}
-                fontSize={style.fontSize}
-                renderOrder={renderOrder}
-                anchorX={textAnchor.x}
-                anchorY={textAnchor.y}
-                font={style.fontFamily}
-                textAlign={style.textAlign}
-                lineHeight={style.lineHeight}
-                outlineWidth={style.outlineWidth}
-                outlineColor={style.outlineColor}
-                outlineOpacity={style.outlineOpacity}
-                outlineOffsetX={style.outlineOffsetX}
-                outlineOffsetY={style.outlineOffsetY}
-                material={textMaterial}
-                onSync={(troika) => {
-                  const box = troika.geometry.boundingBox;
-                  if (box === null) return;
-                  const width = box.max.x - box.min.x;
-                  const height = box.max.y - box.min.y;
-                  setTextSize((textSize) => {
-                    if (textSize.width === width && textSize.height === height) {
-                      return textSize;
-                    }
-                    return { width, height };
-                  });
-                }}
-              >
-                {props.text}
-              </Text>
-            )}
             {children.map((child, index) => {
               const position = childrenPositions[index];
               return (

@@ -9,6 +9,7 @@ export default function App() {
       <PerspectiveCamera makeDefault position={[0, 0, 5]} />
       <OrbitControls />
       <Layer
+        position={[-1.1, 0, 0]}
         height={2}
         aspectRatio={1}
         style={{
@@ -26,6 +27,25 @@ export default function App() {
         }}
         text={`This is some text \non a new line.`}
       />
+      <Layer
+        position={[1.1, 0, 0]}
+        height={2}
+        aspectRatio={1}
+        style={{
+          backgroundColor: "crimson",
+          gap: "5%",
+          overflow: "auto",
+          borderRadius: 0.1,
+        }}
+      >
+        <Layer
+          width="50%"
+          aspectRatio={1}
+          style={{ backgroundColor: "lightblue", borderRadius: 0.5, alignItems: "center", justifyContent: "center" }}
+        >
+          <Layer width="25%" aspectRatio={1} style={{ backgroundColor: "brown" }} />
+        </Layer>
+      </Layer>
     </Canvas>
   );
 }
