@@ -10,10 +10,16 @@ export type StyleProps = {
   borderRadius: number | [topLeft: number, topRight: number, bottomRight: number, bottomLeft: number];
   zIndex: number;
   color: ColorRepresentation;
+  fontFamily: string;
   fontSize: number;
   textAlign: "center" | "left" | "right" | "justify";
   lineHeight: number;
   verticalAlign: "top" | "middle" | "bottom";
+  outlineWidth: number;
+  outlineColor: ColorRepresentation;
+  outlineOpacity: number;
+  outlineOffsetX: number;
+  outlineOffsetY: number;
 };
 
 export type ContainerSize = {

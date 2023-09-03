@@ -118,8 +118,14 @@ export default function Layer(props: Props) {
                 renderOrder={renderOrder}
                 anchorX={textAnchor.x}
                 anchorY={textAnchor.y}
+                font={style.fontFamily}
                 textAlign={style.textAlign}
                 lineHeight={style.lineHeight}
+                outlineWidth={style.outlineWidth}
+                outlineColor={style.outlineColor}
+                outlineOpacity={style.outlineOpacity}
+                outlineOffsetX={style.outlineOffsetX}
+                outlineOffsetY={style.outlineOffsetY}
                 material={textMaterial}
                 onSync={(troika) => {
                   const box = troika.geometry.boundingBox;

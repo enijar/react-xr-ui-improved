@@ -20,7 +20,9 @@ export default function App() {
           color: "#ffffff",
           verticalAlign: "middle",
           textAlign: "center",
+          fontFamily: "./fonts/roboto-slab-regular.woff",
           fontSize: 0.2,
+          outlineWidth: 0.01,
         }}
         text={`This is some text \non a new line.`}
       />
