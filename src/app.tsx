@@ -3,20 +3,23 @@ import { useFrame } from "@react-three/fiber";
 import Layer, { LayerRef } from "@/lib/layer";
 
 export default function App() {
-  const layerRef = React.useRef<LayerRef>(null);
-
-  const [borderRadius, setBorderRadius] = React.useState(0);
+  const outerLayerRef = React.useRef<LayerRef>(null);
+  const innerLayerRef = React.useRef<LayerRef>(null);
 
   useFrame(() => {
-    const layer = layerRef.current;
-    if (layer === null) return;
-    if (layer.group === null) return;
+    const outerLayer = outerLayerRef.current;
+    const innerLayer = innerLayerRef.current;
+    if (outerLayer === null) return;
+    if (innerLayer === null) return;
+    if (outerLayer.group === null) return;
     const progress = Date.now();
-    const speed = 250;
+    const speed = 300;
     const amplitude = 0.25;
-    layer.group.position.x = Math.cos(progress / speed) * amplitude;
-    layer.group.position.y = Math.sin(progress / speed) * amplitude;
-    setBorderRadius((1 + Math.sin(progress / speed)) / 2);
+    outerLayer.group.position.x = Math.cos(progress / speed) * amplitude;
+    outerLayer.group.position.y = Math.sin(progress / speed) * amplitude;
+    const borderRadius = (1 + Math.sin(progress / speed)) / 2;
+    outerLayer.updateStyle({ borderRadius });
+    innerLayer.updateStyle({ borderRadius: 0.125 * (1 - borderRadius) });
   });
 
   return (
@@ -58,20 +61,21 @@ export default function App() {
         }}
       >
         <Layer
-          ref={layerRef}
+          ref={outerLayerRef}
           width="50%"
           aspectRatio={1}
           style={{
             backgroundColor: "lightblue",
-            borderRadius: 0.5 * borderRadius,
+            borderRadius: 0,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
           <Layer
+            ref={innerLayerRef}
             width="25%"
             aspectRatio={1}
-            style={{ backgroundColor: "brown", borderRadius: 0.125 * (1 - borderRadius) }}
+            style={{ backgroundColor: "brown", borderRadius: 0 }}
           />
         </Layer>
       </Layer>

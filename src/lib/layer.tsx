@@ -7,7 +7,7 @@ import type { Position, SizeProps, StyleProps } from "@/lib/types";
 import Scroller from "@/lib/scroller";
 import useChildren from "@/lib/use-children";
 import useFlexbox, { calculateChildPosition } from "@/lib/use-flexbox";
-import useStyle from "@/lib/use-style";
+import useStyle, { UseStyle } from "@/lib/use-style";
 import useContextValue from "@/lib/use-context-value";
 import useRoundedPlane from "@/lib/use-rounded-plane";
 
@@ -25,19 +25,13 @@ const SHAPE_DETAIL = 32;
 
 export type LayerRef = {
   group: React.RefObject<THREE.Group>["current"];
+  style: UseStyle[0];
+  updateStyle: UseStyle[1];
 };
 
 function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
-  const groupRef = React.useRef<THREE.Group>(null);
-
-  React.useImperativeHandle(ref, () => {
-    return {
-      group: groupRef.current,
-    };
-  });
-
   const size = useSize(props.width, props.height, props.aspectRatio);
-  const style = useStyle(props.style);
+  const [style, updateStyle] = useStyle(props.style);
   const children = useChildren(props.children, style);
   const flexbox = useFlexbox(children, size, style);
   const contextValue = useContextValue(children, style, size);
@@ -49,6 +43,20 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
       return calculateChildPosition(child, index, children, style, size);
     });
   }, [children, style, size]);
+
+  const groupRef = React.useRef<THREE.Group>(null);
+
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        group: groupRef.current,
+        style,
+        updateStyle,
+      };
+    },
+    [style, updateStyle],
+  );
 
   const renderOrder = React.useMemo(() => {
     return contextValue.id + style.zIndex;
