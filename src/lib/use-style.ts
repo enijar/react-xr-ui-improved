@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleProps } from "@/lib/types";
+import { BLANK_IMAGE } from "@/lib/consts";
 
 export type UpdateStyleArgs = Partial<StyleProps> | ((style: StyleProps) => Partial<StyleProps>);
 
@@ -10,6 +11,7 @@ export default function useStyle(styles?: Partial<StyleProps>): UseStyle {
     const props = styles ?? {};
     return {
       backgroundColor: props.backgroundColor ?? "transparent",
+      backgroundImage: props.backgroundImage ?? BLANK_IMAGE,
       opacity: props.opacity ?? 1,
       flexDirection: props.flexDirection ?? "column",
       gap: props.gap ?? 0,

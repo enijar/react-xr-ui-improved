@@ -4,6 +4,7 @@ export type ScaledValue = number | `${number}%`;
 
 export type StyleProps = {
   backgroundColor: ColorRepresentation;
+  backgroundImage: string;
   opacity: number;
   flexDirection: "row" | "row-reverse" | "column" | "column-reverse";
   gap: ScaledValue;
