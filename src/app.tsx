@@ -11,9 +11,7 @@ export default function App() {
       aspectRatio={1}
       style={{
         backgroundColor: "#9c96ad",
-        overflow: "auto",
         borderRadius: 0.1,
-        lineHeight: 1.2,
         color: "#ffffff",
         verticalAlign: "middle",
         textAlign: "center",

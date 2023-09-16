@@ -4,6 +4,7 @@ import Range from "@/editor/range";
 import Select from "@/editor/select";
 import Textarea from "@/editor/textarea";
 import File from "@/editor/file";
+import Color from "@/editor/color";
 
 type Props = {
   children?: React.ReactNode;
@@ -38,22 +39,42 @@ export default function Editor({ children }: Props) {
           prop="fontFamily"
           label="Font Family"
           options={[
-            {
-              value: "/fonts/roboto-regular.woff",
-              label: "Roboto Regular",
-            },
-            {
-              value: "/fonts/roboto-slab.woff",
-              label: "Roboto Slab",
-            },
-            {
-              value: "/fonts/roboto-mono.woff",
-              label: "Roboto Mono",
-            },
+            { value: "/fonts/roboto-regular.woff", label: "Roboto Regular" },
+            { value: "/fonts/roboto-slab.woff", label: "Roboto Slab" },
+            { value: "/fonts/roboto-mono.woff", label: "Roboto Mono" },
           ]}
         />
 
+        <Select
+          prop="verticalAlign"
+          label="Vertical Align"
+          defaultValue="middle"
+          options={[
+            { value: "top", label: "Top" },
+            { value: "middle", label: "Middle" },
+            { value: "bottom", label: "Bottom" },
+          ]}
+        />
+
+        <Select
+          prop="textAlign"
+          label="Vertical Align"
+          defaultValue="center"
+          options={[
+            { value: "center", label: "Center" },
+            { value: "left", label: "Left" },
+            { value: "right", label: "Right" },
+            { value: "justify", label: "Justify" },
+          ]}
+        />
+
+        <Range prop="lineHeight" label="Line Height" min={0} max={2} step={0.01} defaultValue={1.2} />
+
+        <Color prop="color" label="Color" defaultValue="#ffffff" />
+
         <Textarea id="text" label="Text" value={text} onChange={setText} />
+
+        <Color prop="backgroundColor" label="Background Color" defaultValue="#9c96ad" />
 
         <File
           id="backgroundImage"

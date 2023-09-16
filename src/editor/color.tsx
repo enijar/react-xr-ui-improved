@@ -5,18 +5,18 @@ import { StyleProps } from "@/lib/types";
 type Props = {
   prop: keyof StyleProps;
   label: string;
-  options: Array<{ value: string; label: string }>;
   defaultValue?: string;
 };
 
-export default function Select({ prop, label, options, defaultValue }: Props) {
+export default function Color({ prop, label, defaultValue }: Props) {
   const { setStyle } = React.useContext(EditorContext);
 
   return (
     <fieldset>
       <label htmlFor={prop}>{label}</label>
-      <select
+      <input
         id={prop}
+        type="color"
         defaultValue={defaultValue}
         onInput={(event) => {
           const value = event.currentTarget.value;
@@ -24,15 +24,7 @@ export default function Select({ prop, label, options, defaultValue }: Props) {
             return { ...style, [prop]: value };
           });
         }}
-      >
-        {options.map((option, index) => {
-          return (
-            <option key={index} value={option.value}>
-              {option.label}
-            </option>
-          );
-        })}
-      </select>
+      />
     </fieldset>
   );
 }
