@@ -19,7 +19,7 @@ export default function Vector({ prop, label, min, max, step, defaultValue, onCh
     <fieldset>
       <label>{label}</label>
       <label>
-        <span>x: </span>
+        <span>x:</span>
         <input
           type="range"
           min={min}
@@ -33,7 +33,7 @@ export default function Vector({ prop, label, min, max, step, defaultValue, onCh
         />
       </label>
       <label>
-        <span>y: </span>
+        <span>y:</span>
         <input
           type="range"
           min={min}
