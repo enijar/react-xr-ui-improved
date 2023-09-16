@@ -71,7 +71,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
   const mask = useMask(contextValue.id);
 
   const textMaterial = React.useMemo(() => {
-    return new THREE.MeshBasicMaterial({ ...mask });
+    return new THREE.MeshBasicMaterial({ ...mask, depthWrite: false, transparent: true });
   }, []);
 
   return (
@@ -97,7 +97,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         </mesh>
         {/* backgroundImage */}
         {style.backgroundImage !== "none" && (
-          <mesh ref={backgroundImageMeshRef} renderOrder={renderOrder}>
+          <mesh ref={backgroundImageMeshRef} renderOrder={renderOrder + 1}>
             <planeGeometry args={[textureSize.width, textureSize.height]} />
             <meshBasicMaterial depthWrite={false} transparent={true} opacity={style.opacity} {...mask} />
           </mesh>
@@ -105,7 +105,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         {props.text !== undefined && (
           <Text
             {...text.props}
-            renderOrder={renderOrder}
+            renderOrder={renderOrder + 2}
             onSync={text.updateSize}
             whiteSpace="normal"
             material={textMaterial}
@@ -117,7 +117,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
           {children.map((child, index) => {
             const position = childrenPositions[index];
             return (
-              <group key={index} position-x={position.x} position-y={position.y} renderOrder={renderOrder}>
+              <group key={index} position-x={position.x} position-y={position.y} renderOrder={renderOrder + 3}>
                 {child}
               </group>
             );
