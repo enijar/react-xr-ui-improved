@@ -12,7 +12,7 @@ root.render(
   <Editor>
     <Canvas flat linear gl={{ alpha: false }}>
       <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-      <OrbitControls />
+      <OrbitControls minDistance={0.5} maxDistance={10} />
       <App />
     </Canvas>
   </Editor>,
