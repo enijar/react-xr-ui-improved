@@ -48,13 +48,12 @@ export default function useText(style: StyleProps, containerSize: ContainerSize)
     return calculateScaledSize(style.outlineWidth, fontSize);
   }, [style.outlineWidth, fontSize]);
 
-  const outlineOffsetX = React.useMemo(() => {
-    return calculateScaledSize(style.outlineOffsetX, fontSize);
-  }, [style.outlineOffsetX, fontSize]);
-
-  const outlineOffsetY = React.useMemo(() => {
-    return calculateScaledSize(style.outlineOffsetY, fontSize);
-  }, [style.outlineOffsetY, fontSize]);
+  const outlineOffset = React.useMemo(() => {
+    return [
+      calculateScaledSize(style.outlineOffset[0], fontSize),
+      calculateScaledSize(style.outlineOffset[1], fontSize),
+    ];
+  }, [style.outlineOffset, fontSize]);
 
   const props = React.useMemo(() => {
     return {
@@ -62,8 +61,8 @@ export default function useText(style: StyleProps, containerSize: ContainerSize)
       fontSize,
       font: style.fontFamily,
       outlineWidth,
-      outlineOffsetX,
-      outlineOffsetY,
+      outlineOffsetX: outlineOffset[0],
+      outlineOffsetY: outlineOffset[1],
       anchorX: anchor.x,
       anchorY: anchor.y,
       textAlign: style.textAlign,
@@ -77,8 +76,7 @@ export default function useText(style: StyleProps, containerSize: ContainerSize)
     textMaterial,
     fontSize,
     outlineWidth,
-    outlineOffsetX,
-    outlineOffsetY,
+    outlineOffset,
     anchor,
     style.fontFamily,
     style.textAlign,

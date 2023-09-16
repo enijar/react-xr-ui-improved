@@ -69,9 +69,31 @@ export default function Editor({ children }: Props) {
           ]}
         />
 
+        <Range prop="fontSize" label="Font Size" min={0.01} max={1} step={0.01} defaultValue={0.1} />
+
         <Range prop="lineHeight" label="Line Height" min={0} max={2} step={0.01} defaultValue={1.2} />
 
         <Color prop="color" label="Color" defaultValue="#ffffff" />
+
+        <Range prop="outlineWidth" label="Outline Width" min={0} max={0.05} step={0.001} defaultValue={0} />
+
+        <Range prop="outlineOpacity" label="Outline Opacity" min={0} max={1} step={0.001} defaultValue={1} />
+
+        <Color prop="outlineColor" label="Outline Color" defaultValue="#000000" />
+
+        <Vector
+          prop="outlineOffset"
+          label="Outline Offset"
+          min={-100}
+          max={100}
+          step={0.01}
+          defaultValue={{ x: 0, y: 0 }}
+          onChange={(vector) => {
+            setStyle((style) => {
+              return { ...style, outlineOffset: [`${vector.x}%`, `${vector.y}%`] };
+            });
+          }}
+        />
 
         <Textarea id="text" label="Text" value={text} onChange={setText} />
 

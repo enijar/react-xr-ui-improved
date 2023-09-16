@@ -6,12 +6,8 @@ export type ScaledValue = number | `${number}%`;
 export type StyleProps = {
   backgroundColor: ColorRepresentation;
   backgroundImage: string;
-  backgroundSize:
-    | "contain"
-    | "cover"
-    | "stretch"
-    | [width: `${number}%` | "auto" | number, height: `${number}%` | "auto" | number];
-  backgroundPosition: [x: `${number}%` | number, y: `${number}%` | number];
+  backgroundSize: "contain" | "cover" | "stretch" | [width: ScaledValue | "auto", height: ScaledValue | "auto"];
+  backgroundPosition: [x: ScaledValue, y: ScaledValue];
   opacity: number;
   flexDirection: "row" | "row-reverse" | "column" | "column-reverse";
   gap: ScaledValue;
@@ -29,8 +25,7 @@ export type StyleProps = {
   outlineWidth: ScaledValue;
   outlineColor: ColorRepresentation;
   outlineOpacity: number;
-  outlineOffsetX: ScaledValue;
-  outlineOffsetY: ScaledValue;
+  outlineOffset: [x: ScaledValue, y: ScaledValue];
 };
 
 export type ContainerSize = {
@@ -39,8 +34,8 @@ export type ContainerSize = {
 };
 
 export type SizeProps = {
-  width?: number | `${number}%` | ((containerSize: ContainerSize) => number);
-  height?: number | `${number}%` | ((containerSize: ContainerSize) => number);
+  width?: ScaledValue | ((containerSize: ContainerSize) => number);
+  height?: ScaledValue | ((containerSize: ContainerSize) => number);
   aspectRatio?: number;
 };
 

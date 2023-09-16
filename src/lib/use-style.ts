@@ -30,8 +30,7 @@ export default function useStyle(styles?: Partial<StyleProps>): UseStyle {
       outlineWidth: props.outlineWidth ?? 0,
       outlineColor: props.outlineColor ?? "#000000",
       outlineOpacity: props.outlineOpacity ?? 1,
-      outlineOffsetX: props.outlineOffsetX ?? 0,
-      outlineOffsetY: props.outlineOffsetY ?? 0,
+      outlineOffset: [props.outlineOffset?.[0] ?? 0, props.outlineOffset?.[1] ?? 0],
     };
   }, [styles]);
 
