@@ -1,7 +1,10 @@
 import React from "react";
 import Layer from "@/lib/layer";
+import { EditorContext } from "@/editor";
 
 export default function App() {
+  const { style, text } = React.useContext(EditorContext);
+
   return (
     <Layer
       width={2}
@@ -14,12 +17,13 @@ export default function App() {
         color: "#ffffff",
         verticalAlign: "middle",
         textAlign: "center",
-        fontFamily: "./fonts/roboto-slab-regular.woff",
+        fontFamily: "./fonts/roboto-regular.woff",
         fontSize: "10%",
         backgroundSize: "cover",
         backgroundImage: `/images/robot.png`,
+        ...style,
       }}
-      text={`This is some text \non a new line.`}
+      text={text}
     />
   );
 }

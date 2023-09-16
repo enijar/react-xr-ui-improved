@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -28,11 +28,68 @@
       }
 
       html {
+        font-family: system-ui;
         color-scheme: dark light;
+      }
+
+      aside {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 280px;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.57);
+        border-left: 1px solid #555555;
+        color: #ffffff;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        user-select: none;
+      }
+
+      aside * {
+        pointer-events: auto;
+      }
+
+      label,
+      input,
+      textarea,
+      select {
+        display: block;
+        width: 100%;
+      }
+
+      textarea, input {
+        padding: 5px;
+      }
+
+      textarea {
+        min-height: 100px;
+        max-height: 300px;
+        resize: vertical;
+      }
+
+      fieldset {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border: none;
+        border-bottom: 1px solid #555555;
+        padding-bottom: 10px;
+        width: 100%;
+      }
+
+      fieldset:last-child {
+        border-bottom: none;
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
+    <div id="editor"></div>
   </body>
 </html>

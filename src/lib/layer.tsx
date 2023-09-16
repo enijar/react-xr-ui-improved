@@ -99,7 +99,13 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
           </mesh>
         )}
         {props.text !== undefined && (
-          <Text {...text.props} renderOrder={renderOrder} onSync={text.updateSize}>
+          <Text
+            {...text.props}
+            renderOrder={renderOrder}
+            onSync={text.updateSize}
+            whiteSpace="normal"
+            clipRect={[size.width / -2, size.height / -2, size.width / 2, size.height / 2]}
+          >
             {props.text}
           </Text>
         )}
