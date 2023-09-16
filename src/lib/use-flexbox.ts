@@ -79,7 +79,7 @@ export function calculateChildPosition(
   index: number,
   children: React.ReactElement[],
   style: StyleProps,
-  containerSize: ContainerSize
+  containerSize: ContainerSize,
 ) {
   const lastIndex = Math.max(0, children.length - 1);
   const gapSize = calculateSize({ width: style.gap, height: style.gap }, containerSize);

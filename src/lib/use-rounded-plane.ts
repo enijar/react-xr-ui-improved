@@ -29,7 +29,7 @@ export default function useRoundedPlane(size: ContainerSize, style: StyleProps) 
       radiusBottomRight,
       0,
       Math.PI * 1.5,
-      true
+      true,
     );
     // Bottom-left corner
     shape.lineTo(-width / 2 + radiusBottomLeft, -height / 2);
@@ -39,7 +39,7 @@ export default function useRoundedPlane(size: ContainerSize, style: StyleProps) 
       radiusBottomLeft,
       Math.PI * 0.5,
       Math.PI,
-      true
+      true,
     );
     // Top-left corner
     shape.lineTo(-width / 2, height / 2 - radiusTopLeft);

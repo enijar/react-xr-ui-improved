@@ -1,7 +1,7 @@
 import React from "react";
 import * as THREE from "three";
 import { Text } from "@react-three/drei";
-import useSize, { calculateChildrenSize } from "@/lib/use-size";
+import useSize from "@/lib/use-size";
 import { LayerContext } from "@/lib/context";
 import type { Position, SizeProps, StyleProps } from "@/lib/types";
 import useChildren from "@/lib/use-children";
