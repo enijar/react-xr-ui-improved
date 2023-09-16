@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import App from "@/app";
-import Editor from "@/editor";
+import Editor from "@/editor/editor";
 
 const rootElement = document.querySelector("#root");
 const root = ReactDOM.createRoot(rootElement!);

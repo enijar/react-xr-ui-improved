@@ -1,6 +1,6 @@
 import React from "react";
 import Layer from "@/lib/layer";
-import { EditorContext } from "@/editor";
+import { EditorContext } from "@/editor/editor";
 
 export default function App() {
   const { style, text } = React.useContext(EditorContext);

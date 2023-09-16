@@ -1,5 +1,9 @@
 import React from "react";
 import { StyleProps } from "@/lib/types";
+import Range from "@/editor/range";
+import Select from "@/editor/select";
+import Textarea from "@/editor/textarea";
+import File from "@/editor/file";
 
 type Props = {
   children?: React.ReactNode;
@@ -7,12 +11,14 @@ type Props = {
 
 type EditorContextType = {
   style: Partial<StyleProps>;
+  setStyle: React.Dispatch<React.SetStateAction<EditorContextType["style"]>>;
   text: string;
 };
 
 export const EditorContext = React.createContext<EditorContextType>({
   style: {},
-  text: "This is some text.",
+  setStyle() {},
+  text: "",
 });
 
 export default function Editor({ children }: Props) {
@@ -20,65 +26,45 @@ export default function Editor({ children }: Props) {
   const [text, setText] = React.useState("This is some text.");
 
   return (
-    <EditorContext.Provider value={{ style, text }}>
+    <EditorContext.Provider value={{ style, setStyle, text }}>
       {children}
+
       <aside>
         <h1>Edit Styles</h1>
-        <fieldset>
-          <label htmlFor="borderRadius">Border Radius</label>
-          <input
-            id="borderRadius"
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            defaultValue={0.1}
-            onInput={(event) => {
-              const borderRadius = parseFloat(event.currentTarget.value);
-              setStyle((style) => ({ ...style, borderRadius }));
-            }}
-          />
-        </fieldset>
-        <fieldset>
-          <label htmlFor="fontFamily">Font</label>
-          <select
-            id="fontFamily"
-            onInput={(event) => {
-              const fontFamily = event.currentTarget.value;
-              setStyle((style) => ({ ...style, fontFamily }));
-            }}
-          >
-            <option value="/fonts/roboto-regular.woff">Roboto Regular</option>
-            <option value="/fonts/roboto-slab.woff">Roboto Slab</option>
-            <option value="/fonts/roboto-mono.woff">Roboto Mono</option>
-          </select>
-        </fieldset>
-        <fieldset>
-          <label htmlFor="text">Text</label>
-          <textarea
-            id="text"
-            value={text}
-            onInput={(event) => {
-              const text = event.currentTarget.value;
-              setText(text);
-            }}
-          />
-        </fieldset>
-        <fieldset>
-          <label htmlFor="backgroundImage">Background Image</label>
-          <input
-            id="backgroundImage"
-            type="file"
-            accept="image/jpeg,image/png"
-            onChange={(event) => {
-              if (event.target.files === null) return;
-              if (event.target.files.length === 0) return;
-              const file = event.target.files[0];
-              const backgroundImage = URL.createObjectURL(file);
-              setStyle((style) => ({ ...style, backgroundImage }));
-            }}
-          />
-        </fieldset>
+
+        <Range prop="borderRadius" label="Border Radius" min={0} max={1} step={0.01} defaultValue={0.1} />
+
+        <Select
+          prop="fontFamily"
+          label="Font Family"
+          options={[
+            {
+              value: "/fonts/roboto-regular.woff",
+              label: "Roboto Regular",
+            },
+            {
+              value: "/fonts/roboto-slab.woff",
+              label: "Roboto Slab",
+            },
+            {
+              value: "/fonts/roboto-mono.woff",
+              label: "Roboto Mono",
+            },
+          ]}
+        />
+
+        <Textarea id="text" label="Text" value={text} onChange={setText} />
+
+        <File
+          id="backgroundImage"
+          label="Background Image"
+          onChange={(file) => {
+            const backgroundImage = URL.createObjectURL(file);
+            setStyle((style) => {
+              return { ...style, backgroundImage };
+            });
+          }}
+        />
       </aside>
     </EditorContext.Provider>
   );
