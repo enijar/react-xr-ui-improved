@@ -1,6 +1,6 @@
 import React from "react";
 import * as THREE from "three";
-import { Text } from "@react-three/drei";
+import { Mask, Text, useMask } from "@react-three/drei";
 import useSize from "@/lib/use-size";
 import { LayerContext } from "@/lib/context";
 import type { Position, SizeProps, StyleProps } from "@/lib/types";
@@ -10,6 +10,8 @@ import useStyle, { UseStyle } from "@/lib/use-style";
 import useContextValue from "@/lib/use-context-value";
 import useRoundedPlane from "@/lib/use-rounded-plane";
 import useText from "@/lib/use-text";
+import useTexture from "@/lib/use-texture";
+import { BackgroundImageRef } from "@/lib/types";
 
 type Props = {
   width?: SizeProps["width"];
@@ -62,6 +64,12 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
 
   const shape = useRoundedPlane(size, style);
 
+  const backgroundImageMeshRef = React.useRef<BackgroundImageRef>(null);
+
+  const textureSize = useTexture(style, size, backgroundImageMeshRef);
+
+  const mask = useMask(contextValue.id);
+
   return (
     <LayerContext.Provider value={contextValue}>
       <group
@@ -70,6 +78,10 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         position-y={props.position?.[1]}
         position-z={props.position?.[2]}
       >
+        <Mask id={contextValue.id} renderOrder={renderOrder}>
+          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
+        </Mask>
+        {/* backgroundColor */}
         <mesh renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
           <meshBasicMaterial
@@ -79,6 +91,13 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
             opacity={style.backgroundColor === "transparent" ? 0 : style.opacity}
           />
         </mesh>
+        {/* backgroundImage */}
+        {style.backgroundImage !== "none" && (
+          <mesh ref={backgroundImageMeshRef} renderOrder={renderOrder}>
+            <planeGeometry args={[textureSize.width, textureSize.height]} />
+            <meshBasicMaterial depthWrite={false} transparent={true} opacity={style.opacity} {...mask} />
+          </mesh>
+        )}
         {props.text !== undefined && (
           <Text {...text.props} renderOrder={renderOrder} onSync={text.updateSize}>
             {props.text}

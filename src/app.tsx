@@ -41,13 +41,16 @@ export default function App() {
           overflow: "auto",
           borderRadius: 0.1,
           lineHeight: 1.2,
-          color: "#ffffff",
+          color: "#999999",
           verticalAlign: "middle",
           textAlign: "center",
           fontFamily: "./fonts/roboto-slab-regular.woff",
           fontSize: "10%",
+          backgroundSize: "contain",
+          backgroundPosition: ["50%", "100%"],
+          backgroundImage: `/images/landscape.png`,
         }}
-        text={`This is some text \non a new line.`}
+        // text={`This is some text \non a new line.`}
       />
       <Layer
         width="47%"

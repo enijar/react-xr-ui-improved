@@ -1,10 +1,17 @@
 import type { ColorRepresentation } from "three";
+import * as THREE from "three";
 
 export type ScaledValue = number | `${number}%`;
 
 export type StyleProps = {
   backgroundColor: ColorRepresentation;
   backgroundImage: string;
+  backgroundSize:
+    | "contain"
+    | "cover"
+    | "stretch"
+    | [width: `${number}%` | "auto" | number, height: `${number}%` | "auto" | number];
+  backgroundPosition: [x: `${number}%` | number, y: `${number}%` | number];
   opacity: number;
   flexDirection: "row" | "row-reverse" | "column" | "column-reverse";
   gap: ScaledValue;
@@ -44,3 +51,5 @@ export type ScrollerStyleProps = {
 };
 
 export type Position = [x?: number, y?: number, z?: number];
+
+export type BackgroundImageRef = THREE.Mesh<THREE.ShapeGeometry, THREE.MeshBasicMaterial>;
