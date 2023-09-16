@@ -5,6 +5,7 @@ import Select from "@/editor/select";
 import Textarea from "@/editor/textarea";
 import File from "@/editor/file";
 import Color from "@/editor/color";
+import Vector from "@/editor/vector";
 
 type Props = {
   children?: React.ReactNode;
@@ -75,6 +76,31 @@ export default function Editor({ children }: Props) {
         <Textarea id="text" label="Text" value={text} onChange={setText} />
 
         <Color prop="backgroundColor" label="Background Color" defaultValue="#9c96ad" />
+
+        <Select
+          prop="backgroundSize"
+          label="Background Size"
+          defaultValue="contain"
+          options={[
+            { value: "contain", label: "Contain" },
+            { value: "cover", label: "Cover" },
+            { value: "stretch", label: "Stretch" },
+          ]}
+        />
+
+        <Vector
+          prop="backgroundPosition"
+          label="Background Position"
+          min={0}
+          max={100}
+          step={1}
+          defaultValue={{ x: 50, y: 50 }}
+          onChange={(vector) => {
+            setStyle((style) => {
+              return { ...style, backgroundPosition: [`${vector.x}%`, `${vector.y}%`] };
+            });
+          }}
+        />
 
         <File
           id="backgroundImage"
