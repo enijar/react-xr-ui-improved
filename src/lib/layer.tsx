@@ -70,6 +70,10 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
 
   const mask = useMask(contextValue.id);
 
+  const textMaterial = React.useMemo(() => {
+    return new THREE.MeshBasicMaterial({ ...mask });
+  }, []);
+
   return (
     <LayerContext.Provider value={contextValue}>
       <group
@@ -104,7 +108,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
             renderOrder={renderOrder}
             onSync={text.updateSize}
             whiteSpace="normal"
-            clipRect={[size.width / -2, size.height / -2, size.width / 2, size.height / 2]}
+            material={textMaterial}
           >
             {props.text}
           </Text>
