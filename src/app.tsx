@@ -18,7 +18,7 @@ export default function App() {
         fontFamily: "./fonts/roboto-regular.woff",
         fontSize: "10%",
         backgroundSize: "cover",
-        backgroundImage: `/images/robot.png`,
+        backgroundImage: `./images/robot.png`,
         ...style,
       }}
       text={text}

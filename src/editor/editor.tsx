@@ -40,9 +40,9 @@ export default function Editor({ children }: Props) {
           prop="fontFamily"
           label="Font Family"
           options={[
-            { value: "/fonts/roboto-regular.woff", label: "Roboto Regular" },
-            { value: "/fonts/roboto-slab.woff", label: "Roboto Slab" },
-            { value: "/fonts/roboto-mono.woff", label: "Roboto Mono" },
+            { value: "./fonts/roboto-regular.woff", label: "Roboto Regular" },
+            { value: "./fonts/roboto-slab.woff", label: "Roboto Slab" },
+            { value: "./fonts/roboto-mono.woff", label: "Roboto Mono" },
           ]}
         />
 
