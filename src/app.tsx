@@ -34,7 +34,7 @@ export default function App() {
               textAlign: style.textAlign ?? "center",
               verticalAlign: style.verticalAlign ?? "middle",
               fontFamily: style.fontFamily ?? "./fonts/roboto-regular.woff",
-              fontSize: style.fontSize ?? "10%",
+              fontSize: style.fontSize ?? 0.3,
               lineHeight: style.lineHeight ?? 1.2,
               outlineWidth: style.outlineWidth ?? 0,
               outlineOpacity: style.outlineOpacity ?? 1,

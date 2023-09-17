@@ -130,11 +130,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
           </mesh>
         )}
         {/* text */}
-        {props.text !== undefined && (
-          <React.Suspense fallback={<></>}>
-            <LayerText textContent={props.text} renderOrder={renderOrder + 3} style={style} size={size} mask={mask} />
-          </React.Suspense>
-        )}
+        <LayerText textContent={props.text} renderOrder={renderOrder + 3} style={style} size={size} mask={mask} />
         {/* children */}
         <group ref={childrenGroupRef} position-x={flexbox.x} position-y={flexbox.y}>
           {children.map((child, index) => {

@@ -80,7 +80,7 @@ export default function Editor({ children }: Props) {
           ]}
         />
 
-        <Range prop="fontSize" label="Font Size" min={0.01} max={1} step={0.01} defaultValue={0.1} />
+        <Range prop="fontSize" label="Font Size" min={0.01} max={1} step={0.01} defaultValue={0.3} />
 
         <Range prop="lineHeight" label="Line Height" min={0} max={2} step={0.01} defaultValue={1.2} />
 

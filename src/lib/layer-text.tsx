@@ -5,7 +5,7 @@ import { ContainerSize, StyleProps } from "@/lib/types";
 import useText from "@/lib/use-text";
 
 type Props = {
-  textContent: string;
+  textContent?: string;
   style: StyleProps;
   size: ContainerSize;
   renderOrder: number;
@@ -31,6 +31,10 @@ export default function LayerText({ textContent, style, size, renderOrder, mask 
   }, [text.props, style.opacity, mask, style.overflow]);
 
   React.useEffect(updateTextMaterial, [text.props, style.opacity, mask, style.overflow]);
+
+  if (textContent === undefined) {
+    return <></>;
+  }
 
   return (
     <Text {...text.props} renderOrder={renderOrder} onSync={text.updateSize} whiteSpace="normal">
