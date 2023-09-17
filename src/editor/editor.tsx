@@ -37,6 +37,17 @@ export default function Editor({ children }: Props) {
         <Range prop="borderRadius" label="Border Radius" min={0} max={1} step={0.01} defaultValue={0.1} />
 
         <Select
+          prop="overflow"
+          label="Overflow"
+          defaultValue="hidden"
+          options={[
+            { value: "hidden", label: "Hidden" },
+            { value: "auto", label: "Auto" },
+            { value: "visible", label: "Visible" },
+          ]}
+        />
+
+        <Select
           prop="fontFamily"
           label="Font Family"
           options={[
@@ -95,6 +106,8 @@ export default function Editor({ children }: Props) {
           }}
         />
 
+        <Range prop="opacity" label="Opacity" min={0} max={1} step={0.001} defaultValue={0.5} />
+
         <Textarea id="text" label="Text" value={text} onChange={setText} />
 
         <Color prop="backgroundColor" label="Background Color" defaultValue="#9c96ad" />
@@ -102,7 +115,7 @@ export default function Editor({ children }: Props) {
         <Select
           prop="backgroundSize"
           label="Background Size"
-          defaultValue="contain"
+          defaultValue="cover"
           options={[
             { value: "contain", label: "Contain" },
             { value: "cover", label: "Cover" },

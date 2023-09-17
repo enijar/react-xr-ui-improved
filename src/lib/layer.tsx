@@ -74,6 +74,35 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
     return new THREE.MeshBasicMaterial({ ...mask, depthWrite: false, transparent: true });
   }, []);
 
+  React.useEffect(() => {
+    if (style.overflow === "visible") return;
+    textMaterial.opacity = style.opacity;
+    Object.assign(textMaterial, mask);
+    textMaterial.needsUpdate = true;
+  }, [textMaterial, style.opacity, mask, style.overflow]);
+
+  const childrenGroupRef = React.useRef<THREE.Group>(null);
+
+  React.useEffect(() => {
+    const childrenGroup = childrenGroupRef.current;
+    if (childrenGroup === null) return;
+    childrenGroup.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.material instanceof THREE.Material) {
+        if (style.overflow === "visible") {
+          child.material.stencilWrite = false;
+          child.material.stencilRef = 0;
+          child.material.stencilFunc = THREE.AlwaysStencilFunc;
+          child.material.stencilFail = THREE.KeepStencilOp;
+          child.material.stencilZFail = THREE.KeepStencilOp;
+          child.material.stencilZPass = THREE.KeepStencilOp;
+        } else {
+          Object.assign(child.material, mask);
+        }
+        child.material.needsUpdate = true;
+      }
+    });
+  }, [children, mask, style.overflow]);
+
   return (
     <LayerContext.Provider value={contextValue}>
       <group
@@ -84,9 +113,10 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
       >
         <Mask id={contextValue.id} renderOrder={renderOrder}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
+          <meshBasicMaterial color="white" opacity={0} transparent={true} depthWrite={false} />
         </Mask>
         {/* backgroundColor */}
-        <mesh renderOrder={renderOrder}>
+        <mesh renderOrder={renderOrder + 1}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
           <meshBasicMaterial
             color={style.backgroundColor === "transparent" ? "#ffffff" : style.backgroundColor}
@@ -97,7 +127,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         </mesh>
         {/* backgroundImage */}
         {style.backgroundImage !== "none" && (
-          <mesh ref={backgroundImageMeshRef} renderOrder={renderOrder + 1}>
+          <mesh ref={backgroundImageMeshRef} renderOrder={renderOrder + 2}>
             <planeGeometry args={[textureSize.width, textureSize.height]} />
             <meshBasicMaterial depthWrite={false} transparent={true} opacity={style.opacity} {...mask} />
           </mesh>
@@ -105,7 +135,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         {props.text !== undefined && (
           <Text
             {...text.props}
-            renderOrder={renderOrder + 2}
+            renderOrder={renderOrder + 3}
             onSync={text.updateSize}
             whiteSpace="normal"
             material={textMaterial}
@@ -113,11 +143,11 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
             {props.text}
           </Text>
         )}
-        <group position-x={flexbox.x} position-y={flexbox.y}>
+        <group ref={childrenGroupRef} position-x={flexbox.x} position-y={flexbox.y}>
           {children.map((child, index) => {
             const position = childrenPositions[index];
             return (
-              <group key={index} position-x={position.x} position-y={position.y} renderOrder={renderOrder + 3}>
+              <group key={index} position-x={position.x} position-y={position.y} renderOrder={renderOrder + 4}>
                 {child}
               </group>
             );

@@ -10,18 +10,42 @@ export default function App() {
       width={2}
       aspectRatio={1}
       style={{
-        backgroundColor: "#9c96ad",
-        borderRadius: 0.1,
-        color: "#ffffff",
-        verticalAlign: "middle",
-        textAlign: "center",
-        fontFamily: "./fonts/roboto-regular.woff",
-        fontSize: "10%",
-        backgroundSize: "cover",
-        backgroundImage: `./images/robot.png`,
-        ...style,
+        backgroundColor: style.backgroundColor ?? "#9c96ad",
+        borderRadius: style.borderRadius ?? 0.1,
+        backgroundSize: style.backgroundSize ?? "cover",
+        backgroundImage: style.backgroundImage ?? "./images/robot.png",
+        backgroundPosition: style.backgroundPosition ?? ["50%", "50%"],
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "5%",
+        overflow: style.overflow ?? "hidden",
       }}
-      text={text}
-    />
+    >
+      {Array.from(Array(3)).map((_, index) => {
+        return (
+          <Layer
+            key={index}
+            width="35%"
+            aspectRatio={1}
+            style={{
+              backgroundColor: "crimson",
+              color: style.color ?? "#ffffff",
+              textAlign: style.textAlign ?? "center",
+              verticalAlign: style.verticalAlign ?? "middle",
+              fontFamily: style.fontFamily ?? "./fonts/roboto-regular.woff",
+              fontSize: style.fontSize ?? "10%",
+              lineHeight: style.lineHeight ?? 1.2,
+              outlineWidth: style.outlineWidth ?? 0,
+              outlineOpacity: style.outlineOpacity ?? 1,
+              outlineColor: style.outlineColor ?? "#000000",
+              outlineOffset: style.outlineOffset ?? [0, 0],
+              opacity: style.opacity ?? 0.5,
+            }}
+            text={text}
+          />
+        );
+      })}
+    </Layer>
   );
 }
