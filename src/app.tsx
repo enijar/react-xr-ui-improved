@@ -15,10 +15,10 @@ export default function App() {
         backgroundSize: style.backgroundSize ?? "cover",
         backgroundImage: style.backgroundImage ?? "./images/robot.png",
         backgroundPosition: style.backgroundPosition ?? ["50%", "50%"],
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "5%",
+        flexDirection: style.flexDirection ?? "row",
+        alignItems: style.alignItems ?? "center",
+        justifyContent: style.justifyContent ?? "center",
+        gap: style.gap ?? 0.1,
         overflow: style.overflow ?? "hidden",
       }}
     >
@@ -26,7 +26,7 @@ export default function App() {
         return (
           <Layer
             key={index}
-            width="35%"
+            width="25%"
             aspectRatio={1}
             style={{
               backgroundColor: "crimson",
@@ -42,7 +42,7 @@ export default function App() {
               outlineOffset: style.outlineOffset ?? [0, 0],
               opacity: style.opacity ?? 0.5,
             }}
-            text={text}
+            text={`${text} ${index + 1}`}
           />
         );
       })}

@@ -48,6 +48,42 @@ export default function Editor({ children }: Props) {
         />
 
         <Select
+          prop="flexDirection"
+          label="Flex Direction"
+          defaultValue="row"
+          options={[
+            { value: "row", label: "Row" },
+            { value: "row-reverse", label: "Row Reverse" },
+            { value: "column", label: "Column" },
+            { value: "column-reverse", label: "Column Reverse" },
+          ]}
+        />
+
+        <Select
+          prop="alignItems"
+          label="Align Items"
+          defaultValue="center"
+          options={[
+            { value: "start", label: "Start" },
+            { value: "center", label: "Center" },
+            { value: "end", label: "End" },
+          ]}
+        />
+
+        <Select
+          prop="justifyContent"
+          label="Justify Content"
+          defaultValue="center"
+          options={[
+            { value: "start", label: "Start" },
+            { value: "center", label: "Center" },
+            { value: "end", label: "End" },
+          ]}
+        />
+
+        <Range prop="gap" label="Gap" min={0} max={1} step={0.01} defaultValue={0.1} />
+
+        <Select
           prop="fontFamily"
           label="Font Family"
           options={[
