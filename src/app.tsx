@@ -22,11 +22,11 @@ export default function App() {
         overflow: style.overflow ?? "hidden",
       }}
     >
-      {Array.from(Array(3)).map((_, index) => {
+      {Array.from(Array(1)).map((_, index) => {
         return (
           <Layer
             key={index}
-            width="35%"
+            width="150%"
             aspectRatio={1}
             style={{
               backgroundColor: "crimson",

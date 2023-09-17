@@ -1,6 +1,6 @@
 import React from "react";
 import * as THREE from "three";
-import { Mask, Text, useMask } from "@react-three/drei";
+import { Mask, useMask } from "@react-three/drei";
 import useSize from "@/lib/use-size";
 import { LayerContext } from "@/lib/context";
 import type { Position, SizeProps, StyleProps } from "@/lib/types";
@@ -9,9 +9,9 @@ import useFlexbox, { calculateChildPosition } from "@/lib/use-flexbox";
 import useStyle, { UseStyle } from "@/lib/use-style";
 import useContextValue from "@/lib/use-context-value";
 import useRoundedPlane from "@/lib/use-rounded-plane";
-import useText from "@/lib/use-text";
 import useTexture from "@/lib/use-texture";
 import { BackgroundImageRef } from "@/lib/types";
+import LayerText from "@/lib/layer-text";
 
 type Props = {
   width?: SizeProps["width"];
@@ -31,17 +31,11 @@ export type LayerRef = {
   updateStyle: UseStyle[1];
 };
 
-function Load({ onLoad }: { onLoad: () => void }) {
-  React.useEffect(onLoad, []);
-  return <></>;
-}
-
 function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
   const size = useSize(props.width, props.height, props.aspectRatio);
   const [style, updateStyle] = useStyle(props.style);
   const children = useChildren(props.children, style);
   const flexbox = useFlexbox(children, size, style);
-  const text = useText(style, size);
   const contextValue = useContextValue(children, size);
   const childrenPositions = React.useMemo(() => {
     return children.map((child, index) => {
@@ -75,23 +69,6 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
 
   const mask = useMask(contextValue.id);
 
-  const updateTextMaterial = React.useCallback(() => {
-    text.props.material.opacity = style.opacity;
-    if (style.overflow === "visible") {
-      text.props.material.stencilWrite = false;
-      text.props.material.stencilRef = 0;
-      text.props.material.stencilFunc = THREE.AlwaysStencilFunc;
-      text.props.material.stencilFail = THREE.KeepStencilOp;
-      text.props.material.stencilZFail = THREE.KeepStencilOp;
-      text.props.material.stencilZPass = THREE.KeepStencilOp;
-    } else {
-      Object.assign(text.props.material, mask);
-    }
-    text.props.material.needsUpdate = true;
-  }, [text.props.material, style.opacity, mask, style.overflow]);
-
-  React.useEffect(updateTextMaterial, [text.props.material, style.opacity, mask, style.overflow]);
-
   const childrenGroupRef = React.useRef<THREE.Group>(null);
 
   React.useEffect(() => {
@@ -122,6 +99,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         position-y={props.position?.[1]}
         position-z={props.position?.[2]}
       >
+        {/* mask */}
         {style.overflow !== "visible" && (
           <Mask id={contextValue.id} renderOrder={renderOrder}>
             <shapeGeometry args={[shape, SHAPE_DETAIL]} />
@@ -151,14 +129,13 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
             />
           </mesh>
         )}
+        {/* text */}
         {props.text !== undefined && (
           <React.Suspense fallback={<></>}>
-            <Text {...text.props} renderOrder={renderOrder + 3} onSync={text.updateSize} whiteSpace="normal">
-              {props.text}
-            </Text>
-            <Load onLoad={updateTextMaterial} />
+            <LayerText textContent={props.text} renderOrder={renderOrder + 3} style={style} size={size} mask={mask} />
           </React.Suspense>
         )}
+        {/* children */}
         <group ref={childrenGroupRef} position-x={flexbox.x} position-y={flexbox.y}>
           {children.map((child, index) => {
             const position = childrenPositions[index];
