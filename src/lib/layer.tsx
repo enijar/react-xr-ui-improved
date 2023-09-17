@@ -100,12 +100,10 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         position-z={props.position?.[2]}
       >
         {/* mask */}
-        {style.overflow !== "visible" && (
-          <Mask id={contextValue.id} renderOrder={renderOrder}>
-            <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-            <meshBasicMaterial color="white" opacity={0} transparent={true} depthWrite={false} />
-          </Mask>
-        )}
+        <Mask id={contextValue.id} renderOrder={renderOrder}>
+          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
+          <meshBasicMaterial color="white" opacity={0} transparent={true} depthWrite={false} />
+        </Mask>
         {/* backgroundColor */}
         <mesh renderOrder={renderOrder + 1}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
@@ -114,19 +112,13 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
             depthWrite={false}
             transparent={true}
             opacity={style.backgroundColor === "transparent" ? 0 : style.opacity}
-            {...(style.overflow !== "visible" ? mask : {})}
           />
         </mesh>
         {/* backgroundImage */}
         {style.backgroundImage !== "none" && (
           <mesh ref={backgroundImageMeshRef} renderOrder={renderOrder + 2}>
             <planeGeometry args={[textureSize.width, textureSize.height]} />
-            <meshBasicMaterial
-              depthWrite={false}
-              transparent={true}
-              opacity={style.opacity}
-              {...(style.overflow !== "visible" ? mask : {})}
-            />
+            <meshBasicMaterial depthWrite={false} transparent={true} opacity={style.opacity} {...mask} />
           </mesh>
         )}
         {/* text */}

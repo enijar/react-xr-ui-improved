@@ -22,11 +22,11 @@ export default function App() {
         overflow: style.overflow ?? "hidden",
       }}
     >
-      {Array.from(Array(1)).map((_, index) => {
+      {Array.from(Array(3)).map((_, index) => {
         return (
           <Layer
             key={index}
-            width="150%"
+            width="35%"
             aspectRatio={1}
             style={{
               backgroundColor: "crimson",
@@ -34,7 +34,7 @@ export default function App() {
               textAlign: style.textAlign ?? "center",
               verticalAlign: style.verticalAlign ?? "middle",
               fontFamily: style.fontFamily ?? "./fonts/roboto-regular.woff",
-              fontSize: style.fontSize ?? 0.3,
+              fontSize: style.fontSize ?? 0.1,
               lineHeight: style.lineHeight ?? 1.2,
               outlineWidth: style.outlineWidth ?? 0,
               outlineOpacity: style.outlineOpacity ?? 1,
