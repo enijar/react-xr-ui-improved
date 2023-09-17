@@ -77,7 +77,14 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
 
   const updateTextMaterial = React.useCallback(() => {
     text.props.material.opacity = style.opacity;
-    if (style.overflow !== "visible") {
+    if (style.overflow === "visible") {
+      text.props.material.stencilWrite = false;
+      text.props.material.stencilRef = 0;
+      text.props.material.stencilFunc = THREE.AlwaysStencilFunc;
+      text.props.material.stencilFail = THREE.KeepStencilOp;
+      text.props.material.stencilZFail = THREE.KeepStencilOp;
+      text.props.material.stencilZPass = THREE.KeepStencilOp;
+    } else {
       Object.assign(text.props.material, mask);
     }
     text.props.material.needsUpdate = true;
@@ -115,10 +122,12 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         position-y={props.position?.[1]}
         position-z={props.position?.[2]}
       >
-        <Mask id={contextValue.id} renderOrder={renderOrder} visible={style.overflow !== "visible"}>
-          <shapeGeometry args={[shape, SHAPE_DETAIL]} />
-          <meshBasicMaterial color="white" opacity={0} transparent={true} depthWrite={false} />
-        </Mask>
+        {style.overflow !== "visible" && (
+          <Mask id={contextValue.id} renderOrder={renderOrder}>
+            <shapeGeometry args={[shape, SHAPE_DETAIL]} />
+            <meshBasicMaterial color="white" opacity={0} transparent={true} depthWrite={false} />
+          </Mask>
+        )}
         {/* backgroundColor */}
         <mesh renderOrder={renderOrder + 1}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
@@ -127,23 +136,24 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
             depthWrite={false}
             transparent={true}
             opacity={style.backgroundColor === "transparent" ? 0 : style.opacity}
+            {...(style.overflow !== "visible" ? mask : {})}
           />
         </mesh>
         {/* backgroundImage */}
         {style.backgroundImage !== "none" && (
           <mesh ref={backgroundImageMeshRef} renderOrder={renderOrder + 2}>
             <planeGeometry args={[textureSize.width, textureSize.height]} />
-            <meshBasicMaterial depthWrite={false} transparent={true} opacity={style.opacity} {...mask} />
+            <meshBasicMaterial
+              depthWrite={false}
+              transparent={true}
+              opacity={style.opacity}
+              {...(style.overflow !== "visible" ? mask : {})}
+            />
           </mesh>
         )}
         {props.text !== undefined && (
           <React.Suspense fallback={<></>}>
-            <Text
-              {...text.props}
-              renderOrder={renderOrder + 3}
-              onSync={text.updateSize}
-              whiteSpace="normal"
-            >
+            <Text {...text.props} renderOrder={renderOrder + 3} onSync={text.updateSize} whiteSpace="normal">
               {props.text}
             </Text>
             <Load onLoad={updateTextMaterial} />
