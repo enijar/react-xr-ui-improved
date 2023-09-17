@@ -31,6 +31,11 @@ export type LayerRef = {
   updateStyle: UseStyle[1];
 };
 
+function Load({ onLoad }: { onLoad: () => void }) {
+  React.useEffect(onLoad, []);
+  return <></>;
+}
+
 function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
   const size = useSize(props.width, props.height, props.aspectRatio);
   const [style, updateStyle] = useStyle(props.style);
@@ -70,16 +75,15 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
 
   const mask = useMask(contextValue.id);
 
-  const textMaterial = React.useMemo(() => {
-    return new THREE.MeshBasicMaterial({ ...mask, depthWrite: false, transparent: true });
-  }, []);
+  const updateTextMaterial = React.useCallback(() => {
+    text.props.material.opacity = style.opacity;
+    if (style.overflow !== "visible") {
+      Object.assign(text.props.material, mask);
+    }
+    text.props.material.needsUpdate = true;
+  }, [text.props.material, style.opacity, mask, style.overflow]);
 
-  React.useEffect(() => {
-    if (style.overflow === "visible") return;
-    textMaterial.opacity = style.opacity;
-    Object.assign(textMaterial, mask);
-    textMaterial.needsUpdate = true;
-  }, [textMaterial, style.opacity, mask, style.overflow]);
+  React.useEffect(updateTextMaterial, [text.props.material, style.opacity, mask, style.overflow]);
 
   const childrenGroupRef = React.useRef<THREE.Group>(null);
 
@@ -111,7 +115,7 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
         position-y={props.position?.[1]}
         position-z={props.position?.[2]}
       >
-        <Mask id={contextValue.id} renderOrder={renderOrder}>
+        <Mask id={contextValue.id} renderOrder={renderOrder} visible={style.overflow !== "visible"}>
           <shapeGeometry args={[shape, SHAPE_DETAIL]} />
           <meshBasicMaterial color="white" opacity={0} transparent={true} depthWrite={false} />
         </Mask>
@@ -133,15 +137,17 @@ function Layer(props: Props, ref: React.ForwardedRef<LayerRef>) {
           </mesh>
         )}
         {props.text !== undefined && (
-          <Text
-            {...text.props}
-            renderOrder={renderOrder + 3}
-            onSync={text.updateSize}
-            whiteSpace="normal"
-            material={textMaterial}
-          >
-            {props.text}
-          </Text>
+          <React.Suspense fallback={<></>}>
+            <Text
+              {...text.props}
+              renderOrder={renderOrder + 3}
+              onSync={text.updateSize}
+              whiteSpace="normal"
+            >
+              {props.text}
+            </Text>
+            <Load onLoad={updateTextMaterial} />
+          </React.Suspense>
         )}
         <group ref={childrenGroupRef} position-x={flexbox.x} position-y={flexbox.y}>
           {children.map((child, index) => {
