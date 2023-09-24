@@ -12,7 +12,7 @@ export type StyleProps = {
   flexDirection: "row" | "row-reverse" | "column" | "column-reverse";
   gap: ScaledValue;
   alignItems: "start" | "center" | "end";
-  justifyContent: "start" | "center" | "end";
+  justifyContent: "start" | "center" | "end" | "space-between" | "space-around";
   overflow: "hidden" | "auto" | "visible";
   borderRadius: number | [topLeft: number, topRight: number, bottomRight: number, bottomLeft: number];
   zIndex: number;

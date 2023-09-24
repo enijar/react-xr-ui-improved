@@ -8,8 +8,28 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
       return { x: 0, y: 0 };
     }
     const childrenSize = calculateChildrenSize(children, containerSize, style);
+    const gapSize = calculateSize({ width: style.gap, height: style.gap }, containerSize);
+    const childrenSizeWithoutGap = {
+      width: childrenSize.width - gapSize.width * Math.max(0, children.length - 1),
+      height: childrenSize.height - gapSize.height * Math.max(0, children.length - 1),
+    };
     let x = 0;
     let y = 0;
+    let availableSpaceAround = 0;
+    switch (style.flexDirection) {
+      case "row":
+      case "row-reverse":
+        availableSpaceAround = Math.max(0, containerSize.width - childrenSizeWithoutGap.width);
+        break;
+      case "column":
+      case "column-reverse":
+        availableSpaceAround = Math.max(0, containerSize.height - childrenSizeWithoutGap.height);
+        break;
+    }
+    let spaceAroundChildren = 0;
+    if (availableSpaceAround > 0 && children.length > 1) {
+      spaceAroundChildren = availableSpaceAround / (children.length + 1);
+    }
     switch (style.flexDirection) {
       case "row":
       case "row-reverse":
@@ -26,6 +46,7 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
         }
         switch (style.justifyContent) {
           case "start":
+          case "space-between":
             x = containerSize.width / -2;
             break;
           case "center":
@@ -33,6 +54,9 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
             break;
           case "end":
             x = containerSize.width / 2 - childrenSize.width;
+            break;
+          case "space-around":
+            x = containerSize.width / -2 + spaceAroundChildren;
             break;
         }
         break;
@@ -51,6 +75,7 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
         }
         switch (style.justifyContent) {
           case "start":
+          case "space-between":
             y = containerSize.height / 2;
             break;
           case "center":
@@ -58,6 +83,9 @@ export default function useFlexbox(children: React.ReactElement[], containerSize
             break;
           case "end":
             y = containerSize.height / -2 + childrenSize.height;
+            break;
+          case "space-around":
+            y = containerSize.height / 2 - spaceAroundChildren;
             break;
         }
         break;
@@ -87,43 +115,152 @@ export function calculateChildPosition(
   let x = 0;
   let y = 0;
   const childrenSize = calculateChildrenSize(children, containerSize, style);
+  const childrenSizeWithoutGap = {
+    width: childrenSize.width - gapSize.width * Math.max(0, children.length - 1),
+    height: childrenSize.height - gapSize.height * Math.max(0, children.length - 1),
+  };
+  let availableSpaceBetween = 0;
+  switch (style.flexDirection) {
+    case "row":
+    case "row-reverse":
+      availableSpaceBetween = Math.max(0, containerSize.width - childrenSizeWithoutGap.width);
+      break;
+    case "column":
+    case "column-reverse":
+      availableSpaceBetween = Math.max(0, containerSize.height - childrenSizeWithoutGap.height);
+      break;
+  }
+  let spaceBetweenChildren = 0;
+  if (availableSpaceBetween > 0 && children.length > 1) {
+    spaceBetweenChildren = availableSpaceBetween / (children.length - 1);
+  }
+  let availableSpaceAround = 0;
+  switch (style.flexDirection) {
+    case "row":
+    case "row-reverse":
+      availableSpaceAround = Math.max(0, containerSize.width - childrenSizeWithoutGap.width);
+      break;
+    case "column":
+    case "column-reverse":
+      availableSpaceAround = Math.max(0, containerSize.height - childrenSizeWithoutGap.height);
+      break;
+  }
+  let spaceAroundChildren = 0;
+  if (availableSpaceAround > 0 && children.length > 1) {
+    spaceAroundChildren = availableSpaceAround / (children.length + 1);
+  }
   for (let i = 0; i <= index; i++) {
-    if (["row", "row-reverse"].includes(style.flexDirection)) {
-      const offsetY = childSize.height < childrenSize.height ? (childrenSize.height - childSize.height) / 2 : 0;
-      if (style.alignItems === "start") {
-        y = offsetY;
-      }
-      if (style.alignItems === "end") {
-        y = -offsetY;
-      }
-      if (i === 0) {
-        x += childSize.width / 2;
-      } else {
-        const prevChild = children[i - 1];
-        const prevChildSize = calculateChildSize(prevChild, containerSize);
-        x += prevChildSize.width;
-        if (i <= lastIndex) {
-          x += gapSize.width;
+    const offsetY = childSize.height < childrenSize.height ? (childrenSize.height - childSize.height) / 2 : 0;
+    switch (style.flexDirection) {
+      case "row":
+      case "row-reverse":
+        switch (style.alignItems) {
+          case "start":
+            y = offsetY;
+            break;
+          case "center":
+            y = 0;
+            break;
+          case "end":
+            y = -offsetY;
+            break;
         }
-      }
-      continue;
-    }
-    const offsetX = childSize.width < childrenSize.width ? (childrenSize.width - childSize.width) / 2 : 0;
-    if (style.alignItems === "start") {
-      x = -offsetX;
-    }
-    if (style.alignItems === "end") {
-      x = offsetX;
-    }
-    if (i === 0) {
-      y -= childSize.height / 2;
-    } else {
-      const prevChild = children[i - 1];
-      const prevChildSize = calculateChildSize(prevChild, containerSize);
-      y -= prevChildSize.height;
-      if (i <= lastIndex) {
-        y -= gapSize.height;
-      }
+        switch (style.justifyContent) {
+          case "start":
+          case "center":
+          case "end":
+            if (i === 0) {
+              x += childSize.width / 2;
+            } else {
+              const prevChild = children[i - 1];
+              const prevChildSize = calculateChildSize(prevChild, containerSize);
+              x += prevChildSize.width;
+              if (i <= lastIndex) {
+                x += gapSize.width;
+              }
+            }
+            break;
+          case "space-between":
+            if (i === 0) {
+              x += childSize.width / 2;
+            } else {
+              const prevChild = children[i - 1];
+              const prevChildSize = calculateChildSize(prevChild, containerSize);
+              x += prevChildSize.width;
+              if (i <= lastIndex) {
+                x += spaceBetweenChildren;
+              }
+            }
+            break;
+          case "space-around":
+            if (i === 0) {
+              x += childSize.width / 2;
+            } else {
+              const prevChild = children[i - 1];
+              const prevChildSize = calculateChildSize(prevChild, containerSize);
+              x += prevChildSize.width;
+              if (i <= lastIndex) {
+                x += spaceAroundChildren;
+              }
+            }
+            break;
+        }
+        break;
+      case "column":
+      case "column-reverse":
+        const offsetX = childSize.width < childrenSize.width ? (childrenSize.width - childSize.width) / 2 : 0;
+        switch (style.alignItems) {
+          case "start":
+            x = -offsetX;
+            break;
+          case "center":
+            x = 0;
+            break;
+          case "end":
+            x = offsetX;
+            break;
+        }
+        switch (style.justifyContent) {
+          case "start":
+          case "center":
+          case "end":
+            if (i === 0) {
+              y -= childSize.height / 2;
+            } else {
+              const prevChild = children[i - 1];
+              const prevChildSize = calculateChildSize(prevChild, containerSize);
+              y -= prevChildSize.height;
+              if (i <= lastIndex) {
+                y -= gapSize.height;
+              }
+            }
+            break;
+          case "space-between":
+            if (i === 0) {
+              y -= childSize.height / 2;
+            } else {
+              const prevChild = children[i - 1];
+              const prevChildSize = calculateChildSize(prevChild, containerSize);
+              y -= prevChildSize.height;
+              if (i <= lastIndex) {
+                y -= spaceBetweenChildren;
+              }
+            }
+            break;
+          case "space-around":
+            if (i === 0) {
+              y -= childSize.height / 2;
+            } else {
+              const prevChild = children[i - 1];
+              const prevChildSize = calculateChildSize(prevChild, containerSize);
+              y -= prevChildSize.height;
+              if (i <= lastIndex) {
+                y -= spaceAroundChildren;
+              }
+            }
+            break;
+        }
+        break;
     }
   }
   return { x, y };

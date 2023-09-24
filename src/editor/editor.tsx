@@ -78,6 +78,8 @@ export default function Editor({ children }: Props) {
             { value: "start", label: "Start" },
             { value: "center", label: "Center" },
             { value: "end", label: "End" },
+            { value: "space-between", label: "Space Between" },
+            { value: "space-around", label: "Space Around" },
           ]}
         />
 

@@ -23,10 +23,13 @@ export default function App() {
       }}
     >
       {Array.from(Array(3)).map((_, index) => {
+        const widths = ["25%", "45%", "10%"];
+        const texts = ["1", undefined, "3"];
         return (
           <Layer
             key={index}
-            width="25%"
+            // @ts-ignore
+            width={widths[index]}
             aspectRatio={1}
             style={{
               backgroundColor: "crimson",
@@ -42,7 +45,7 @@ export default function App() {
               outlineOffset: style.outlineOffset ?? [0, 0],
               opacity: style.opacity ?? 0.5,
             }}
-            text={`${text} ${index + 1}`}
+            text={texts[index] ?? text}
           />
         );
       })}
