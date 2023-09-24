@@ -1,4 +1,5 @@
 import React from "react";
+import type { ScaledValue } from "@/lib/types";
 import Layer from "@/lib/layer";
 import { EditorContext } from "@/editor/editor";
 
@@ -23,12 +24,11 @@ export default function App() {
       }}
     >
       {Array.from(Array(3)).map((_, index) => {
-        const widths = ["25%", "45%", "10%"];
+        const widths: ScaledValue[] = ["25%", "45%", "10%"];
         const texts = ["1", undefined, "3"];
         return (
           <Layer
             key={index}
-            // @ts-ignore
             width={widths[index]}
             aspectRatio={1}
             style={{
